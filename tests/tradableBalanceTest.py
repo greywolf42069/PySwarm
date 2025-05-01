@@ -1,6 +1,7 @@
-from .. import pywaves as pw
-from .. import address
-from .. import asset
+from tests.helpers import Helpers
+import pywaves as pw
+from pywaves import address
+from pywaves import asset
 
 
 pw.setThrowOnError(True)

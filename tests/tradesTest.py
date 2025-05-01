@@ -1,4 +1,7 @@
-from .. import pywaves as pw
+from tests.helpers import Helpers
+import pywaves as pw
+from pywaves import address
+from pywaves import asset
 
 def test_tradesLimit():
     WAVES_BTC = pw.AssetPair(pw.WAVES, pw.BTC)

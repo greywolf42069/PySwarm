@@ -1,8 +1,8 @@
-
+import pywaves as pw
+from pywaves import address
+from pywaves import asset
+import pytest
 from .helpers import Helpers
-from .. import pywaves as pw
-from .. import address
-from .. import asset
 
 pw.setThrowOnError(True)
 pw.setMatcher('https://testnet.waves.exchange/api/v1/forward/matcher')

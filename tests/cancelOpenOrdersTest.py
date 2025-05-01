@@ -1,6 +1,6 @@
-from .. import pywaves as pw
-from .. import address
-from .. import asset
+import pywaves as pw
+from pywaves import address
+from pywaves import asset
 import time
 
 pw.setThrowOnError(True)

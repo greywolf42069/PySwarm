@@ -1,5 +1,6 @@
-from .. import pywaves as pw
-from .. import address
+import pywaves as pw
+from pywaves import address
+import pytest
 
 pw.setThrowOnError(True)
 

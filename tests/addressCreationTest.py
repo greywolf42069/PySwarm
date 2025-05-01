@@ -1,6 +1,8 @@
-from .. import pywaves as pw
-from .. import address
+import pywaves as pw
+from pywaves import address
 import pytest
+
+pw.setThrowOnError(True)
 
 def test_generateNewTestnetAddress():
     pw.setNode('https://nodes-testnet.wavesnodes.com', 'T')

@@ -1,7 +1,8 @@
+from tests.helpers import Helpers
 import pywaves as pw
-from .. import Order
-from .. import address
-from .. import asset
+from pywaves import address
+from pywaves import asset
+from pywaves.order import Order
 import time
 
 pw.setThrowOnError(True)
