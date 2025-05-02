@@ -1,5 +1,5 @@
 requests>=2.0.0
-python-axolotl-curve25519>=0.4.1
+pywaves-curve25519>=1.0.1
 base58==0.2.5
 protobuf==3.19.6
 pytest>=6.0.0

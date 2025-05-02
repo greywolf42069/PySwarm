@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
 PYTHON_VERSIONS = [
-    "3.6.8",
-    "3.7.9",
     "3.8.10",
     "3.9.13",
     "3.10.11",

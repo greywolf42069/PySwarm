@@ -1,5 +1,5 @@
 import hashlib
-import axolotl_curve25519 as curve
+import pywaves_curve25519 as curve
 import base58
 import os
 from math import log

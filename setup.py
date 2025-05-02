@@ -14,7 +14,7 @@ if __name__ == "__main__":
         packages=setuptools.find_packages(),
         install_requires=[
             "requests",
-            "python-axolotl-curve25519",
+            "pywaves-curve25519",
             "base58==0.2.5",
             "protobuf==3.19.6",
         ],

@@ -1,5 +1,5 @@
 import math
-import axolotl_curve25519 as curve
+import pywaves_curve25519 as curve
 import os
 import logging
 from .txSigner import *
