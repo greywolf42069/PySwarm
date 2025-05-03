@@ -1,16 +1,48 @@
-name: Build and publish Python package
+name: CI and Publish
 
 on:
-  workflow_run:
-    workflows: ["Python Tests"]
-    types: [completed]
+  push:
+    branches: [main, dev]
+    tags:
+      - 'v*'
+  pull_request:
     branches: [main, dev]
   workflow_dispatch:
 
 jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Poetry
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install poetry
+
+    - name: Install dependencies
+      run: |
+        python -m poetry lock
+        python -m poetry install --no-root --with dev
+
+    - name: Run tests
+      run: |
+        python -m poetry run python workflow_ci.py
+
   publish:
+    needs: test
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success'
 
     permissions:
       id-token: write
@@ -18,8 +50,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-      with:
-        ref: ${{ github.event.workflow_run.head_sha }}
 
     - uses: actions/setup-python@v4
       with:
@@ -34,15 +64,14 @@ jobs:
       run: poetry build
 
     - name: Rebuild package with version tag
-      if: startsWith(github.event.workflow_run.head_branch, 'v')
+      if: startsWith(github.ref, 'refs/tags/v')
       run: |
-        VERSION=${{ github.event.workflow_run.head_branch }}
-        VERSION=${VERSION#v}
+        VERSION=${GITHUB_REF#refs/tags/v}
         poetry version $VERSION
         poetry build
 
     - name: Publish to PyPI
-      if: startsWith(github.event.workflow_run.head_branch, 'v')
+      if: startsWith(github.ref, 'refs/tags/v')
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         packages-dir: dist/
