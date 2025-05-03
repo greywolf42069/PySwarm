@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "pywaves"
+name = "PyWaves-CE"
 version = "2.0.0"
 description = "Python library for interacting with the Waves blockchain"
 authors = ["PyWaves Contributors"]
