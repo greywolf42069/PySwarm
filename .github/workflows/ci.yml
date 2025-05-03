@@ -35,4 +35,4 @@ jobs:
 
     - name: Run tests
       run: |
-        python workflow_ci.py
+        python -m poetry run python workflow_ci.py
