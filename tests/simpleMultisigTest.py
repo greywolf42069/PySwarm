@@ -1,9 +1,10 @@
-from .. import crypto as crypto
-from .helpers import Helpers
-from .. import pywaves as pw
-from .. import address
-from .. import txSigner
-from .. import txGenerator
+from tests.helpers import Helpers
+import pywaves as pw
+from pywaves import address
+from pywaves import asset
+import pywaves.crypto as crypto
+from pywaves.txSigner import TxSigner
+from pywaves.txGenerator import TxGenerator
 import base58
 import pytest
 
@@ -15,8 +16,8 @@ def test_sendWaves():
     firstAddress = address.Address(seed = 'this is just a simple test seed one')
     secondAddress = address.Address(seed = 'this is just a simple test seed two')
 
-    generator = txGenerator.TxGenerator()
-    signer = txSigner.TxSigner()
+    generator = TxGenerator()
+    signer = TxSigner()
     tx = generator.generateSendWaves(secondAddress, 1, firstAddress.publicKey, txFee=500000)
     signer.signTx(tx, firstAddress.privateKey)
     signer.signTx(tx, secondAddress.privateKey)
@@ -33,8 +34,8 @@ def test_sendWavesWithAttachment():
     secondAddress = address.Address(seed = 'this is just a simple test seed two')
     attachment = 'just a test transfer'
 
-    generator = txGenerator.TxGenerator()
-    signer = txSigner.TxSigner()
+    generator = TxGenerator()
+    signer = TxSigner()
     tx = generator.generateSendWaves(secondAddress, 1, firstAddress.publicKey, attachment = attachment, txFee=500000)
     signer.signTx(tx, firstAddress.privateKey)
     signer.signTx(tx, secondAddress.privateKey)

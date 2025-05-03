@@ -1,6 +1,9 @@
+from tests.helpers import Helpers
 import pywaves as pw
-from .. import Oracle
-from .helpers import Helpers
+from pywaves import address
+from pywaves import asset
+from pywaves import oracle
+from pywaves.oracle import Oracle
 
 
 pw.setThrowOnError(True)

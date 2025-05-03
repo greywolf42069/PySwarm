@@ -1,5 +1,4 @@
-import pywaves
-from .. import pywaves as pw
+import pywaves as pw
 import requests
 import time
 

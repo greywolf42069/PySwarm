@@ -1,5 +1,8 @@
-from .. import pywaves as pw
-from .. import WXFeeCalculator
+from tests.helpers import Helpers
+import pywaves as pw
+from pywaves import address
+from pywaves import asset
+from pywaves.WXFeeCalculator import WXFeeCalculator
 import requests
 
 

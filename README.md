@@ -2,7 +2,7 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/pywaves-ce.svg)](https://pypi.org/project/pywaves-ce/)
 
-**[PyWaves-CE](https://pypi.org/project/pywaves-ce/)** is a community-maintained fork of the original **[PyWaves](https://pypi.org/project/pywaves/)** library for the Waves blockchain.  
+**[PyWaves-CE](https://pypi.org/project/pywaves-ce/)** is a community-maintained fork of the original **[PyWaves](https://pypi.org/project/pywaves/)** library for the Waves blockchain.
 It is a *drop-in replacement* that keeps the import path `pywaves` intact, so existing code keeps working without edits.
 
 ```bash
@@ -14,19 +14,19 @@ import pywaves as pw           # import path unchanged
 print(pw.__version__)          # "1.0.5"
 ```
 
-> **Notice:**  
-> `pip install pywaves` (without `-ce`) still installs the unmaintained upstream package.  
+> **Notice:**
+> `pip install pywaves` (without `-ce`) still installs the unmaintained upstream package.
 > Use **pywaves-ce** to get the actively maintained version.
 
 ## Purpose & Rationale
 
-- **Unmaintained upstream** – the original [PyWaves](https://pypi.org/project/pywaves/) no longer receives updates.  
-- **Drop-in replacement** – legacy code keeps using `import pywaves as pw` unchanged.  
-- **Active maintenance** – security fixes and new Waves features are delivered regularly.  
-- **Repository layout** – **[PyWaves-CE](https://pypi.org/project/pywaves-ce/)** hosts the pristine [1.0.5 upstream snapshot](https://github.com/PyWaves-CE/PyWaves-CE/tree/PyWaves-1.0.5).  
-- **PyPI distribution** – published as **pywaves-ce** while the internal package name remains `pywaves`.  
-- **Versioning roadmap**  
-  - **1.x** – strict legacy API compatibility with upstream 1.0.5.  
+- **Unmaintained upstream** – the original [PyWaves](https://pypi.org/project/pywaves/) no longer receives updates.
+- **Drop-in replacement** – legacy code keeps using `import pywaves as pw` unchanged.
+- **Active maintenance** – security fixes and new Waves features are delivered regularly.
+- **Repository layout** – **[PyWaves-CE](https://pypi.org/project/pywaves-ce/)** hosts the pristine [1.0.5 upstream snapshot](https://github.com/PyWaves-CE/PyWaves-CE/tree/PyWaves-1.0.5).
+- **PyPI distribution** – published as **pywaves-ce** while the internal package name remains `pywaves`.
+- **Versioning roadmap**
+  - **1.x** – strict legacy API compatibility with upstream 1.0.5.
   - **2.x** – modernization and intentional breaking changes.
 
 ## Documentation
@@ -142,31 +142,31 @@ __pywaves.AssetPair(asset1, asset2)__ _Creates a new AssetPair object with 2 Ass
 #### methods:
 `orderbook()` get order book
 
-`ticker()` get ticker with 24h ohlcv data  
+`ticker()` get ticker with 24h ohlcv data
 
-`last()` get traded price  
+`last()` get traded price
 
-`open()` get 24h open price  
+`open()` get 24h open price
 
-`high()` get 24h high price  
+`high()` get 24h high price
 
-`low()` get 24h low price  
+`low()` get 24h low price
 
-`close()` get 24h close price (same as last())  
+`close()` get 24h close price (same as last())
 
-`vwap()` get 24h vwap price  
+`vwap()` get 24h vwap price
 
-`volume()` get 24h volume  
+`volume()` get 24h volume
 
-`priceVolume()` get 24h price volume  
+`priceVolume()` get 24h price volume
 
-`trades(n)` get the last n trades  
+`trades(n)` get the last n trades
 
-`trades(from, to)` get the trades in from/to interval  
+`trades(from, to)` get the trades in from/to interval
 
-`candles(timeframe, n)` get the last n candles in the specified timeframe  
+`candles(timeframe, n)` get the last n candles in the specified timeframe
 
-`candles(timeframe, from, to)` get the candles in from/to interval in the specified timeframe 
+`candles(timeframe, from, to)` get the candles in from/to interval in the specified timeframe
 
 ### Order Class
 __pywaves.Order(orderId, assetPair, address='')__ Creates a new Order object
@@ -304,7 +304,7 @@ myAddress = pw.Address('3P6WfA4qYtkgwVAsWiiB6yaea2X8zyXncJh')
 # get Waves balance
 print("Your balance is %18d" % myAddress.balance())
 
-# get Waves balance after 20 confirmations 
+# get Waves balance after 20 confirmations
 print("Your balance is %18d" % myAddress.balance(confirmations = 20))
 
 # get an asset balance
@@ -391,15 +391,15 @@ transfers = [
 address = pw.Address(privateKey = "CtMQWJZqfc7PRzSWiMKaGmWFm4q2VN5fMcYyKDBPDx6S")
 address.massTransferAssets(transfers, pw.Asset('9DtBNdyBCyViLZHptyF1HbQk73F6s7nQ5dXhNHubtBhd'))
 ```
-#### Data Transaction: 
+#### Data Transaction:
 ```python
 import pywaves as py
 
 myAddress = py.Address(privateKey='CtMQWJZqfc7PRzSWiMKaGmWFm4q2VN5fMcYyKDBPDx6S')
 
 data = [{
-        'type':'string', 
-        'key': 'test', 
+        'type':'string',
+        'key': 'test',
         'value':'testval'
         }]
 
@@ -618,9 +618,9 @@ res = firstAddress.broadcastTx(tx)
 >>> import pywaves as pw
 >>> pw.Address('3P31zvGdh6ai6JK6zZ18TjYzJsa1B83YPoj')
 address = 3P31zvGdh6ai6JK6zZ18TjYzJsa1B83YPoj
-publicKey = 
-privateKey = 
-seed = 
+publicKey =
+privateKey =
+seed =
 balances:
   Waves = 1186077288304570
   BDMRyZsmDZpgKhdM7fUTknKcUbVVkDpMcqEj31PUzjMy (Tokes) = 43570656915
@@ -632,7 +632,7 @@ balances:
   GQr2fpkfmWjMaZCbqMxefbiwgvpcNgYdev7xpuX6xqcE (KISS) = 1000
   DxG3PLganyNzajHGzvWLjc4P3T2CpkBGxY4J9eJAAUPw (UltraCoin) = 200000000000000
   4eWBPyY4XNPsFLoQK3iuVUfamqKLDu5o6zQCYyp9d8Ae (LIKE) = 1000
->>> 
+>>>
 ```
 
 #### Generate a new address:
@@ -646,7 +646,7 @@ privateKey = CtMQWJZqfc7PRzSWiMKaGmWFm4q2VN5fMcYyKDBPDx6S
 seed = seven wrist bargain hope pattern banner plastic maple student chaos grit next space visa answer
 balances:
   Waves = 0
->>> 
+>>>
 ```
 
 #### Check an asset:
@@ -762,3 +762,43 @@ pw.setNode(node = 'http://127.0.0.1:6869', chain = 'mainnet')
 
 ## License
 Code released under the [MIT License](https://github.com/PyWaves-CE/PyWaves-CE/blob/main/LICENSE).
+
+## Development and Packaging
+
+PyWaves now uses [Poetry](https://python-poetry.org/) for dependency management and packaging. The project has fully migrated from setup.py to pyproject.toml as the single source of truth for package configuration.
+
+### Installation for Development
+
+1. Install Poetry (if not already installed)
+```bash
+pip install poetry
+```
+
+2. Install dependencies
+```bash
+poetry install
+```
+
+3. Activate the virtual environment
+```bash
+poetry shell
+```
+
+### Building the Package
+
+```bash
+poetry build
+```
+
+This will create both wheel and source distributions in the `dist/` directory.
+
+### Testing Across Python Versions
+
+PyWaves includes a workflow testing system that can test across multiple Python versions:
+
+```bash
+python workflow_venvs.py
+python workflow_tests.py
+```
+
+This will test the library with all Python versions specified in PYTHON_VERSIONS.py.

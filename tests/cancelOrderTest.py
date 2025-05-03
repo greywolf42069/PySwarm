@@ -1,7 +1,7 @@
-from .. import pywaves as pw
-from .. import address
-from .. import asset
-from .. import order
+import pywaves as pw
+from pywaves import address
+from pywaves import asset
+from pywaves import order
 import pytest
 import time
 
