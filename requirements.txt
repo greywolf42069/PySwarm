@@ -1,6 +1,0 @@
-requests>=2.0.0
-pywaves-curve25519>=1.0.1
-base58==0.2.5
-protobuf==3.19.6
-pytest>=6.0.0
-pytest-cov>=2.0.0 

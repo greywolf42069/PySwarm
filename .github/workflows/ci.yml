@@ -2,9 +2,9 @@ name: Python Tests
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ main, dev ]
   pull_request:
-    branches: [ dev ]
+    branches: [ main, dev ]
 
 jobs:
   test:
@@ -23,11 +23,16 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install dependencies
+    - name: Install Poetry
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        python -m pip install poetry
+
+    - name: Install dependencies
+      run: |
+        python -m poetry lock
+        python -m poetry install --no-root --with dev
 
     - name: Run tests
       run: |
-        python -m pytest tests/type06Test.py -v 
+        python workflow_ci.py

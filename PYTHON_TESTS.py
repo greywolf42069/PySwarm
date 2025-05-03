@@ -2,4 +2,4 @@
 
 PYTHON_TESTS = [
     "tests/type06Test.py"
-] 
+]
