@@ -28,8 +28,6 @@ def test_succesfullBurnAsset():
     token = faucet.issueAsset(tokenName, f"Test Token {tokenName}", tokenQuantity, tokenDecimals, reissuable=False)
     while not token.status():
 	    pass
-    tokenId = token.getId()
-    print(f"Token {tokenName} created with ID: {tokenId}")
     txId = faucet.burnAsset(token, 1)
     blockchaintx = helpers.waitFor(txId)
     
