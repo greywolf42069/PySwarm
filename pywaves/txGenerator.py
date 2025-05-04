@@ -323,10 +323,10 @@ class TxGenerator:
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
-        script = self.pywaves.wrapper('/utils/script/compile', scriptSource)['script'][7:]
+        script = self.pywaves.wrapper('/utils/script/compileCode', scriptSource)['script'][7:]
         tx = {
             "type": 15,
-            "version": 2, #1,
+            "version": 2,
             "assetId": asset.assetId,
             "senderPublicKey": publicKey,
             "fee": txFee,

@@ -781,7 +781,7 @@ class Address(object):
         return self.setCompiledScript(script, txFee, timestamp, publicKey)
 
     def setAssetScript(self, asset, scriptSource, txFee=pywaves.DEFAULT_ASSET_SCRIPT_FEE, timestamp=0):
-        script = self.pywaves.wrapper('/utils/script/compile', scriptSource)['script'][7:]
+        script = self.pywaves.wrapper('/utils/script/compileCode', scriptSource)['script'][7:]
         if not self.privateKey:
             msg = 'Private key required'
             logging.error(msg)
@@ -794,7 +794,6 @@ class Address(object):
 
             tx = self.txGenerator.generateSetAssetScript(asset, scriptSource, self.publicKey, txFee, timestamp)
             self.txSigner.signTx(tx, self.privateKey)
-            print(tx)
             return self.broadcastTx(tx)
 
     def issueSmartAsset(self, name, description, quantity, scriptSource, decimals=0, reissuable=False, txFee=pywaves.DEFAULT_ASSET_FEE, timestamp=0):
