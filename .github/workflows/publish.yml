@@ -37,6 +37,9 @@ jobs:
         python -m poetry install --no-root --with dev
 
     - name: Run tests
+      env:
+        PYWAVES_TEST_NODE: ${{ vars.PYWAVES_TEST_NODE }}
+        PYWAVES_TEST_SECRET: ${{ secrets.PYWAVES_TEST_SECRET }}
       run: |
         python -m poetry run python workflow_ci.py
 
