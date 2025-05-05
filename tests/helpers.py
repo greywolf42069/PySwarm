@@ -31,7 +31,7 @@ class Helpers:
         testwallet = address.Address(seed=PYWAVES_FAUCET_SECRET+testcase)
         testwalletBalance = testwallet.balance()
         if (testwalletBalance < 100000000):
-            faucet.sendWaves(testwallet, 100000000-testwalletbalance)
+            faucet.sendWaves(testwallet, 100000000-testwalletBalance)
         print(f"Operating on address: {testwallet.address}")
         return testwallet
 
