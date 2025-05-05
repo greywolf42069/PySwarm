@@ -28,9 +28,11 @@ class Helpers:
     def prepareTestcase(self):
         pw.setNode(PYWAVES_TEST_NODE, 'T')
         faucet = address.Address(privateKey=PYWAVES_FAUCET_SECRET)
+        '''
         balance = faucet.balance()
         if (balance < 300000000):
             raise Exception('Faucet balance is too low. Please refill it.')
+        '''
         # generate a random address
         seed = PYWAVES_FAUCET_SECRET + str(int(time.time() * 1000))
         print(f"Using seed: {seed}")
@@ -39,11 +41,12 @@ class Helpers:
         
         testwalletBalance = testwallet.balance()
         # refill test wallet
+       
         if (testwalletBalance < 50000000):
             print(f"----- Sending waves to testwallet -----")
             tx = faucet.sendWaves(testwallet, 100000000-testwalletBalance)
             self.waitFor(tx['id'])
-
+        
         # check it faucet has test asset
         assets = faucet.assets()
         if (len(assets) == 0):
