@@ -39,9 +39,9 @@ class Helpers:
         
         testwalletBalance = testwallet.balance()
         # refill test wallet
-        if (testwalletBalance < 150000000):
+        if (testwalletBalance < 50000000):
             print(f"----- Sending waves to testwallet -----")
-            tx = faucet.sendWaves(testwallet, 300000000-testwalletBalance)
+            tx = faucet.sendWaves(testwallet, 100000000-testwalletBalance)
             self.waitFor(tx['id'])
 
         # check it faucet has test asset
