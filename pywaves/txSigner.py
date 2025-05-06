@@ -4,9 +4,9 @@ import struct
 import pywaves as pw
 import pywaves.crypto as crypto
 
-from .protobuf.waves import transaction_pb2
-from .protobuf.waves import recipient_pb2
-from .protobuf.waves import amount_pb2
+from waves import transaction_pb2
+from waves import recipient_pb2
+from waves import amount_pb2
 
 class TxSigner:
 
