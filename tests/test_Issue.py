@@ -5,15 +5,22 @@ import time
 from tests.helpers import Helpers
 import os
 
+PYWAVES_FAUCET_SECRET = os.getenv('PYWAVES_TEST_SECRET')
 PYWAVES_TEST_NODE = os.getenv('PYWAVES_TEST_NODE')
 THISTEST = 'testIssue'
+
 NAME = THISTEST + time.strftime('%y%m%d')
 
 pw.setThrowOnError(True)
 pw.setNode(PYWAVES_TEST_NODE, 'T')
 
 helpers = Helpers()
+faucet = address.Address(privateKey=PYWAVES_FAUCET_SECRET)
 testwallet = helpers.prepareTestcase()
+
+# add an extra 1 wves funding to the testwallet
+tx = faucet.sendWaves(testwallet, 100000000)
+helpers.waitFor(tx['id'])
 
 try:
 
