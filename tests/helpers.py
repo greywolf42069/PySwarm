@@ -2,6 +2,7 @@ import os
 import pywaves as pw
 import requests
 import time
+import base58
 from pywaves import address
 from pywaves import asset
 
@@ -33,8 +34,8 @@ class Helpers:
         if (balance < 300000000):
             raise Exception('Faucet balance is too low. Please refill it.')
         '''
-        # generate a random address
-        seed = PYWAVES_FAUCET_SECRET + str(int(time.time() * 1000))
+        # generate a random address using 32 random bytes converted to base58
+        seed = str(base58.b58encode(os.urandom(32)))
         print(f"Using seed: {seed}")
         testwallet = address.Address(seed=seed)
         print(f"Operating on address: {testwallet.address}")
