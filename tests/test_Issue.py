@@ -20,7 +20,7 @@ faucet = address.Address(privateKey=PYWAVES_FAUCET_SECRET)
 testwallet = helpers.prepareTestcase()
 
 # add an extra 1 wves funding to the testwallet
-tx = faucet.sendWaves(testwallet, 200000000)
+tx = faucet.sendWaves(testwallet, 100000000)
 helpers.waitFor(tx['id'])
 
 try:
