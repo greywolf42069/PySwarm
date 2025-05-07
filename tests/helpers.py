@@ -29,11 +29,7 @@ class Helpers:
     def prepareTestcase(self):
         pw.setNode(PYWAVES_TEST_NODE, 'T')
         faucet = address.Address(privateKey=PYWAVES_FAUCET_SECRET)
-        '''
-        balance = faucet.balance()
-        if (balance < 300000000):
-            raise Exception('Faucet balance is too low. Please refill it.')
-        '''
+        
         # generate a random address using 32 random bytes converted to base58
         seed = str(base58.b58encode(os.urandom(32)))
         print(f"Using seed: {seed}")
@@ -54,6 +50,10 @@ class Helpers:
             testtoken = faucet.issueAsset('pw_testasset', f"Test Token", 10000000*(10**8), 8, reissuable=True)
             while not testtoken.status():
                 pass
+            # sponsor asset           
+            assets = faucet.assets()        
+            tx = faucet.sponsorAsset(assetId=assets[0]['assetId'], minimalFeeInAssets = 1000000)
+            self.waitFor(tx['id'])
         else:
             testtoken = asset.Asset(assets[0])
             

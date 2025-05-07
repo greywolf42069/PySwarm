@@ -8,8 +8,7 @@ import pytest
 
 PYWAVES_FAUCET_SECRET = os.getenv('PYWAVES_TEST_SECRET')
 PYWAVES_TEST_NODE = os.getenv('PYWAVES_TEST_NODE')
-THISTEST = 'testIssue'
-
+THISTEST = 'Asset'
 NAME = THISTEST + time.strftime('%y%m%d')
 
 pw.setThrowOnError(True)
