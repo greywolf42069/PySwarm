@@ -72,6 +72,7 @@ class Helpers:
         pw.setNode(PYWAVES_TEST_NODE, 'T')
         faucet = address.Address(privateKey=PYWAVES_TEST_SECRET)
         testwalletBalance = testwallet.balance()
+        print(f"Testwallet balance: {testwalletBalance}")   
         if (testwalletBalance > 100000):
             testwallet.sendWaves(faucet, testwalletBalance-100000)
 

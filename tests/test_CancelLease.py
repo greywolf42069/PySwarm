@@ -15,23 +15,21 @@ seed = str(base58.b58encode(os.urandom(32)))
 leasingAddress = address.Address(seed=seed)
 seed = str(base58.b58encode(os.urandom(32)))
 leasingAddressWithNoBalance = address.Address(seed=seed)
-
+leasingId = str(base58.b58encode(os.urandom(32)))
 
 try:
 
     def test_cancelWithoutPrivateKey():
         myAddress = address.Address('3MpvqThrQUCC1DbkY9sMmo4fp77e2h11NaM')
-        leasingID = 'testLeaseID'
 
         with pytest.raises(Exception) as error:
-            myAddress.leaseCancel(leasingID)
+            myAddress.leaseCancel(leasingId)
 
         assert str(error) == '<ExceptionInfo PyWavesException(\'Private key required\') tblen=3>'
     
     def test_cancelWithFeeIsBiggerThanBalance():
-        leasingID ='testleasingId'
         with pytest.raises(Exception) as error:
-            leasingAddress.leaseCancel(leasingID)
+            leasingAddressWithNoBalance.leaseCancel(leasingId)
 
         assert str(error) == '<ExceptionInfo PyWavesException(\'Insufficient Waves balance\') tblen=3>'
         
@@ -47,7 +45,7 @@ try:
     
     def test_pywavesOffline():
         pw.setOffline()
-        leaseCancelTransactionId = testwallet.leaseCancel('3sEGi6tL8Ptg4L9wJv8FZRYu1hJxFJrWZGC4tWVrcycS')
+        leaseCancelTransactionId = testwallet.leaseCancel(leasingId)
         pw.setOnline()
 
         assert leaseCancelTransactionId['api-type'] == 'POST'
