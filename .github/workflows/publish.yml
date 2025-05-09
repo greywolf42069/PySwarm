@@ -50,7 +50,6 @@ jobs:
       env:
         PYWAVES_TEST_NODE: ${{ vars.PYWAVES_TEST_NODE }}
         PYWAVES_TEST_SECRET: ${{ secrets.PYWAVES_TEST_SECRET }}
-        TEST_NODE_ADDRESS: ${{TEST_NODE_ADDRESS}}
       run: |
         python -m poetry run python workflow_ci.py
 
