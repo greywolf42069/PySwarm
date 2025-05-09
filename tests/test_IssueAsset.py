@@ -6,16 +6,15 @@ from tests.helpers import Helpers
 import os
 import pytest
 
-PYWAVES_FAUCET_SECRET = os.getenv('PYWAVES_TEST_SECRET')
+PYWAVES_TEST_SECRET = os.getenv('PYWAVES_TEST_SECRET')
 PYWAVES_TEST_NODE = os.getenv('PYWAVES_TEST_NODE')
-THISTEST = 'Asset'
-NAME = THISTEST + time.strftime('%y%m%d')
+NAME = 'Issue' + time.strftime('%y%m%d')
 
 pw.setThrowOnError(True)
 pw.setNode(PYWAVES_TEST_NODE, 'T')
 
 helpers = Helpers()
-faucet = address.Address(privateKey=PYWAVES_FAUCET_SECRET)
+faucet = address.Address(privateKey=PYWAVES_TEST_SECRET)
 testwallet = helpers.prepareTestcase()
 
 # add an extra 1 wves funding to the testwallet

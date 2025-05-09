@@ -6,15 +6,17 @@ import pytest
 import os
 
 PYWAVES_TEST_NODE = os.getenv('PYWAVES_TEST_NODE')
-THISTEST = 'SendAsset'
-
+PYWAVES_TEST_SECRET = os.getenv('PYWAVES_TEST_SECRET')
 pw.setThrowOnError(True)
 pw.setNode(PYWAVES_TEST_NODE, 'T')
 
 helpers = Helpers()
 testwallet = helpers.prepareTestcase()
-# pw_test_asset
-myToken = asset.Asset('4Xq8bbfRV5R8NmKS9HyWepp3YcbqbzPHwe8wZcf9hn2z')
+
+# use test asset
+faucet = address.Address(privateKey=PYWAVES_TEST_SECRET)
+assets = faucet.assets()
+myToken = asset.Asset(assets[0])
 
 try:
 

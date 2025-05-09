@@ -7,7 +7,6 @@ from tests.helpers import Helpers
 import os
 
 PYWAVES_TEST_NODE = os.getenv('PYWAVES_TEST_NODE')
-THISTEST = 'Burn'
 pw.setThrowOnError(True)
 pw.setNode(PYWAVES_TEST_NODE, 'T')
 

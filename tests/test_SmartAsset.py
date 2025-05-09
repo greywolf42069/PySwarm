@@ -6,21 +6,19 @@ import pytest
 import os
 import time
 
-PYWAVES_FAUCET_SECRET = os.getenv('PYWAVES_TEST_SECRET')
+PYWAVES_TEST_SECRET = os.getenv('PYWAVES_TEST_SECRET')
 PYWAVES_TEST_NODE = os.getenv('PYWAVES_TEST_NODE')
-THISTEST = 'SmartAsset'
-NAME = THISTEST + time.strftime('%y%m%d')
+NAME = 'SmartAsset' + time.strftime('%y%m%d')
 
 pw.setThrowOnError(True)
 pw.setNode(PYWAVES_TEST_NODE, 'T')
 
 helpers = Helpers()
-faucet = address.Address(privateKey=PYWAVES_FAUCET_SECRET)
+faucet = address.Address(privateKey=PYWAVES_TEST_SECRET)
 
 testwallet = helpers.prepareTestcase()
 # add an extra 1 wves funding to the testwallet
 tx = faucet.sendWaves(testwallet, 100000000)
-
 
 try: 
     def test_issueSmartAssetWithoutPrivateKey():
