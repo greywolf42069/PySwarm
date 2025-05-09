@@ -4,19 +4,18 @@ from pywaves import address
 from pywaves import asset
 import pytest
 import os
-
-PYWAVES_TEST_NODE = os.getenv('PYWAVES_TEST_NODE')
-TEST_NODE_ADDRESS = os.getenv('TEST_NODE_ADDRESS')
+import base58
 
 pw.setThrowOnError(True)
-pw.setNode(PYWAVES_TEST_NODE, 'T')
-PYWAVES_TEST_SECRET = os.getenv('PYWAVES_TEST_SECRET')
 
 helpers = Helpers()
 testwallet = helpers.prepareTestcase()
 
-faucet = address.Address(privateKey=PYWAVES_TEST_SECRET)
-leasingAddress = address.Address(TEST_NODE_ADDRESS)
+seed = str(base58.b58encode(os.urandom(32)))
+leasingAddress = address.Address(seed=seed)
+seed = str(base58.b58encode(os.urandom(32)))
+leasingAddressWithNoBalance = address.Address(seed=seed)
+
 
 try:
 
@@ -28,19 +27,14 @@ try:
             myAddress.leaseCancel(leasingID)
 
         assert str(error) == '<ExceptionInfo PyWavesException(\'Private key required\') tblen=3>'
-    '''
-    # commented test. This can't be worked on as now balance() returns regular balance.
-    def test_cancelWithFeeIsBiggerThanBalance():
-    pw.setNode('https://nodes-testnet.wavesnodes.com', 'T')
-    myAddress = address.Address(privateKey='G6aEiT1ih4jwLfgJ89EvULbsziixDuqnEUTpEkvZ76hv')
-    leasingID = address.Address('3MwGH6GPcq7jiGNXgS4K6buynpLZR5LAgQm')
-
-    with pytest.raises(Exception) as error:
-        myAddress.leaseCancel(leasingID)
-
-    assert str(error) == '<ExceptionInfo PyWavesException(\'Insufficient Waves balance\') tblen=3>'
-    '''
     
+    def test_cancelWithFeeIsBiggerThanBalance():
+        leasingID ='testleasingId'
+        with pytest.raises(Exception) as error:
+            leasingAddress.leaseCancel(leasingID)
+
+        assert str(error) == '<ExceptionInfo PyWavesException(\'Insufficient Waves balance\') tblen=3>'
+        
     def test_succesfullCancelLeasing():
         leaseTransaction = testwallet.lease(leasingAddress, 9700000)
         helpers.waitFor(leaseTransaction['id'])
