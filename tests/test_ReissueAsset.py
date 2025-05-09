@@ -14,6 +14,8 @@ helpers = Helpers()
 faucet = address.Address(privateKey=PYWAVES_TEST_SECRET)
 
 # use test asset
+# don't need to create a test wallet, just use faucet
+
 assets = faucet.assets()
 myToken = asset.Asset(assets[0])
 

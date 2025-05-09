@@ -488,7 +488,7 @@ class Address(object):
             logging.error(msg)
             self.pywaves.throw_error(msg)
         if not self.pywaves.OFFLINE and self.balance(assetId=asset.assetId) < totalAmount:
-            msg = 'Insufficient %s balance' % asset.name
+            msg = 'Insufficient Asset balance'
             logging.error(msg)
             self.pywaves.throw_error(msg)
         else:
