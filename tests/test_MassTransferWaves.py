@@ -4,6 +4,7 @@ from pywaves import address
 from pywaves import asset
 import pytest
 import base58
+import os
 
 pw.setThrowOnError(True)
 helpers = Helpers()
