@@ -34,14 +34,12 @@ try:
         assert str(error) == '<ExceptionInfo PyWavesException(\'Insufficient Waves balance\') tblen=3>'
         
     def test_succesfullCancelLeasing():
-        leaseTransaction = testwallet.lease(leasingAddress, 9700000)
-        helpers.waitFor(leaseTransaction['id'])
-        print(leaseTransaction['id'])
-        leaseCancelTransactionId = testwallet.leaseCancel(leaseTransaction['id'])
-        print(leaseCancelTransactionId)
-        blockchainTx = helpers.waitFor(leaseCancelTransactionId)
+        leaseTransaction = testwallet.lease(leasingAddress, 9000000)
+        helpers.waitFor(leaseTransaction['id'])        
+        tx = testwallet.leaseCancel(leaseTransaction['id'])
+        blockchainTx = helpers.waitFor(tx['id'])
 
-        assert blockchainTx['id'] == leaseCancelTransactionId
+        assert blockchainTx['id'] == tx['id']
     
     def test_pywavesOffline():
         pw.setOffline()

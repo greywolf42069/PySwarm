@@ -693,12 +693,8 @@ class Address(object):
 
             tx = self.txGenerator.generateLeaseCancel(leaseId, self.publicKey, txFee, timestamp)
             self.txSigner.signTx(tx, self.privateKey)
-            res = self.broadcastTx(tx)
 
-            if self.pywaves.OFFLINE:
-                return res
-            elif 'leaseId' in res:
-                return res['leaseId']
+            return self.broadcastTx(tx)
 
     def getOrderHistory(self, assetPair, timestamp=0):
         if timestamp == 0:
