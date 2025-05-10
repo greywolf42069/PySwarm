@@ -339,7 +339,7 @@ class TxSigner:
 
     def signType12Tx(self, tx, privateKey):
         dataTransaction = transaction_pb2.DataTransactionData()
-
+        print("dataTransaction:", dataTransaction)
         for d in tx['data']:
             entry = transaction_pb2.DataTransactionData.DataEntry()
             if d['type'] == 'boolean':

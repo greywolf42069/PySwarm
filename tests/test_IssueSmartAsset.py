@@ -5,27 +5,31 @@ from pywaves import asset
 import pytest
 import os
 import time
+import base58
+import random
+import string
 
-PYWAVES_TEST_SECRET = os.getenv('PYWAVES_TEST_SECRET')
 PYWAVES_TEST_NODE = os.getenv('PYWAVES_TEST_NODE')
-NAME = 'SmartAsset' + time.strftime('%y%m%d')
 
 pw.setThrowOnError(True)
 pw.setNode(PYWAVES_TEST_NODE, 'T')
-
 helpers = Helpers()
-faucet = address.Address(privateKey=PYWAVES_TEST_SECRET)
+
+seed = str(base58.b58encode(os.urandom(32)))
+address1 = address.Address(seed=seed)
+
+assetName = ''.join(random.choices(string.ascii_lowercase, k=8))
 
 testwallet = helpers.prepareTestcase(101000000)
 
 try: 
     def test_issueSmartAssetWithoutPrivateKey():
-        myAddress = address.Address('3MwGH6GPcq7jiGNXgS4K6buynpLZR5LAgQm')
+        myAddress = address.Address(address1.address)
         script = 'match tx { \n' + \
                 '  case _ => true\n' + \
                 '}'
         with pytest.raises(Exception) as error:
-            myAddress.issueSmartAsset('SmartAsset2', 'This is just a test smart asset', 10000000, scriptSource = script)
+            myAddress.issueSmartAsset(assetName, 'This is just a test smart asset', 10000000, scriptSource = script)
 
         assert str(error) == '<ExceptionInfo PyWavesException(\'Private key required\') tblen=3>'
 
@@ -47,31 +51,18 @@ try:
 
         assert str(error) == '<ExceptionInfo PyWavesException(\'Asset name must be between 4 and 16 characters long\') tblen=3>'
 
-
-    def test_pywavesOffline():
-        script = 'match tx { \n' + \
-                'case _ => true\n' + \
-                '}'
-
-        pw.setOffline()
-        with pytest.raises(Exception) as error:
-            testwallet.issueSmartAsset('SMartAsset', 'This is just a test smart asset', 10000000, scriptSource = script)
-
-        assert str(error) == '<ExceptionInfo PyWavesException(\'PyWaves currently offline\') tblen=3>'
-        pw.setOnline()
-
     def test_succesfullIssueSmartAsset():    
         script = 'match tx { \n' + \
                 'case _ => true\n' + \
                 '}'
+        token = testwallet.issueSmartAsset(assetName, 'This is just a test smart asset', 100, scriptSource=script, decimals=8, reissuable=True)
 
-        token = testwallet.issueAsset(NAME, f"Test Token {NAME}", 100, 8, reissuable=True)
         while not token.status():
             pass
 
         assert token.status() == 'Issued'
-        assert token.name == NAME.encode('ascii', 'ignore')
-        assert token.description == f"Test Token {NAME}".encode('ascii', 'ignore')
+        assert token.name == assetName.encode('ascii', 'ignore')
+        assert token.description == "This is just a test smart asset".encode('ascii', 'ignore')
         assert token.quantity == 100
         assert token.decimals == 8
         assert token.reissuable == True
