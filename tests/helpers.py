@@ -29,7 +29,7 @@ class Helpers:
         else:
             return response
 
-    def prepareTestcase(self):
+    def prepareTestcase(self, amount=1000000):
         pw.setNode(PYWAVES_TEST_NODE, 'T')
         faucet = address.Address(privateKey=PYWAVES_TEST_SECRET)
         
@@ -42,10 +42,9 @@ class Helpers:
         testwalletBalance = testwallet.balance()
         # refill test wallet
        
-        if (testwalletBalance < 50000000):
-            print(f"----- Sending waves to testwallet -----")
-            tx = faucet.sendWaves(testwallet, 100000000-testwalletBalance)
-            self.waitFor(tx['id'])
+        print(f"----- Sending waves to testwallet -----")
+        tx = faucet.sendWaves(testwallet, amount)
+        self.waitFor(tx['id'])
         
         # check it faucet has test asset
         assets = faucet.assets()

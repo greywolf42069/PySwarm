@@ -34,7 +34,7 @@ try:
         assert str(error) == '<ExceptionInfo PyWavesException(\'Insufficient Waves balance\') tblen=3>'
         
     def test_succesfullCancelLeasing():
-        leaseTransaction = testwallet.lease(leasingAddress, 9000000)
+        leaseTransaction = testwallet.lease(leasingAddress, 900000)
         helpers.waitFor(leaseTransaction['id'])        
         tx = testwallet.leaseCancel(leaseTransaction['id'])
         blockchainTx = helpers.waitFor(tx['id'])

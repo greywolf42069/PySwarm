@@ -12,7 +12,7 @@ PYWAVES_TEST_SECRET = os.getenv('PYWAVES_TEST_SECRET')
 
 pw.setThrowOnError(True)
 helpers = Helpers()
-testwallet = helpers.prepareTestcase()
+testwallet = helpers.prepareTestcase(101000000)
 
 seed = str(base58.b58encode(os.urandom(32)))
 recipient1 = address.Address(seed=seed)
@@ -21,15 +21,12 @@ recipient2 = address.Address(seed=seed)
 # use test asset
 faucet = address.Address(privateKey=PYWAVES_TEST_SECRET)
 assets = faucet.assets()
-print(assets)
 myToken = asset.Asset(assets[0])
 # create an address with no balance
 seed = str(base58.b58encode(os.urandom(32)))
 addressWithNoBalance = address.Address(seed=seed)
 # add an extra 1 wves funding to the testwallet
-print(f"----- Adding extra 1 wves funding to the testwallet -----")
-tx = faucet.sendWaves(testwallet, 100000000)
-helpers.waitFor(tx['id'])
+
 print(f"----- Issuing smart asset -----")
 # issue a smart asset
 smartAssetName = ''.join(random.choices(string.ascii_lowercase, k=8))

@@ -16,9 +16,7 @@ pw.setNode(PYWAVES_TEST_NODE, 'T')
 helpers = Helpers()
 faucet = address.Address(privateKey=PYWAVES_TEST_SECRET)
 
-testwallet = helpers.prepareTestcase()
-# add an extra 1 wves funding to the testwallet
-tx = faucet.sendWaves(testwallet, 100000000)
+testwallet = helpers.prepareTestcase(101000000)
 
 try: 
     def test_issueSmartAssetWithoutPrivateKey():

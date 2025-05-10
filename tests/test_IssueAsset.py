@@ -6,7 +6,6 @@ from tests.helpers import Helpers
 import os
 import pytest
 
-PYWAVES_TEST_SECRET = os.getenv('PYWAVES_TEST_SECRET')
 PYWAVES_TEST_NODE = os.getenv('PYWAVES_TEST_NODE')
 NAME = 'Issue' + time.strftime('%y%m%d')
 
@@ -14,12 +13,7 @@ pw.setThrowOnError(True)
 pw.setNode(PYWAVES_TEST_NODE, 'T')
 
 helpers = Helpers()
-faucet = address.Address(privateKey=PYWAVES_TEST_SECRET)
-testwallet = helpers.prepareTestcase()
-
-# add an extra 1 wves funding to the testwallet
-tx = faucet.sendWaves(testwallet, 100000000)
-helpers.waitFor(tx['id'])
+testwallet = helpers.prepareTestcase(101000000)
 
 try:
 
