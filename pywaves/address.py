@@ -707,11 +707,11 @@ class Address(object):
             "Timestamp": str(timestamp),
             "Signature": signature
         }
-        req = self.pywaves.wrapper('/matcher/orderbook/%s/%s/publicKey/%s' % (
+        res = self.pywaves.wrapper('/matcher/orderbook/%s/%s/publicKey/%s' % (
         self.pywaves.DEFAULT_CURRENCY if assetPair.asset1.assetId == '' else assetPair.asset1.assetId,
         self.pywaves.DEFAULT_CURRENCY if assetPair.asset2.assetId == '' else assetPair.asset2.assetId, self.publicKey),
                                    headers=data, host=self.pywaves.MATCHER)
-        return req
+        return res
 
     def cancelOpenOrders(self, assetPair):
         orders = self.getOrderHistory(assetPair)
@@ -831,16 +831,14 @@ class Address(object):
 
             tx = self.txGenerator.generateInvokeScript(dappAddress, functionName, publicKey, params, payments, feeAsset, txFee, timestamp)
             self.txSigner.signTx(tx, self.privateKey)
-            req = self.broadcastTx(tx)
-            if self.pywaves.OFFLINE:
-                return req
-            else:
-                return req
-
+            
+            return self.broadcastTx(tx)
+            
     def updateAssetInfo(self, assetId, name, description, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
         tx = self.txGenerator.generateUpdateAssetInfo(assetId, name, description, self.publicKey, timestamp)
         self.txSigner.signTx(tx, self.privateKey)
+        
         return self.broadcastTx(tx)

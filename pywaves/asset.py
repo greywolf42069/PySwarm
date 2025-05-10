@@ -88,8 +88,8 @@ class AssetPair(object):
             return self.asset1
 
     def orderbook(self):
-        req = self.pywaves.wrapper('/matcher/orderbook/%s/%s' % (self.a1, self.a2), host=self.pywaves.MATCHER)
-        return req
+        res = self.pywaves.wrapper('/matcher/orderbook/%s/%s' % (self.a1, self.a2), host=self.pywaves.MATCHER)
+        return res
 
     def ticker(self):
         return self.pywaves.wrapper('/v0/pairs/%s/%s' % (self.a1, self.a2), host=self.pywaves.DATAFEED)
