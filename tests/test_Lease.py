@@ -12,7 +12,7 @@ pw.setThrowOnError(True)
 pw.setNode(PYWAVES_TEST_NODE, 'T')
 
 helpers = Helpers()
-testwallet = helpers.prepareTestcase()
+testwallet = helpers.prepareTestcase(100000000)
 
 seed = str(base58.b58encode(os.urandom(32)))
 print(f"Using seed: {seed}")
