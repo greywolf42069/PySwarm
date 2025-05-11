@@ -319,7 +319,7 @@ class TxSigner:
     def signType12DeleteTx(self, tx, privateKey):
         dataTransaction = transaction_pb2.DataTransactionData()
 
-        entry = transaction_pb2.DataTransactionData.DataEntry()
+        entry = transaction_pb2.DataEntry()
 
         entry.key = tx['data'][0]['key']
         dataTransaction.data.append(entry)
@@ -341,7 +341,7 @@ class TxSigner:
         dataTransaction = transaction_pb2.DataTransactionData()
         print("dataTransaction:", dataTransaction)
         for d in tx['data']:
-            entry = transaction_pb2.DataTransactionData.DataEntry()
+            entry = transaction_pb2.DataEntry()
             if d['type'] == 'boolean':
                 entry.key = d['key']
                 entry.bool_value = d['value']
