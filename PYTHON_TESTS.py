@@ -16,4 +16,5 @@ PYTHON_TESTS = [
     "tests/test_SetAssetScript.py",
     "tests/test_SetScript.py",
     "tests/test_SponsorAsset.py",
+    "tests/test_UpdateAssetInfo.py",
 ]
