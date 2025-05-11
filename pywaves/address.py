@@ -502,18 +502,40 @@ class Address(object):
             return self.broadcastTx(tx)
 
     def dataTransaction(self, data, timestamp=0, baseFee=pywaves.DEFAULT_BASE_FEE, minimalFee=500000):
-        tx = self.txGenerator.generateDatatransaction(data, self.publicKey, timestamp, baseFee, minimalFee)
-        self.txSigner.signTx(tx, self.privateKey)
+        if not self.privateKey:
+            msg = 'Private key required'
+            logging.error(msg)
+            self.pywaves.throw_error(msg)
+        elif not self.pywaves.OFFLINE and self.balance() < minimalFee:
+            msg = 'Insufficient Waves balance'
+            logging.error(msg)
+            self.pywaves.throw_error(msg)        
+        else:
+            tx = self.txGenerator.generateDatatransaction(data, self.publicKey, timestamp, baseFee, minimalFee)
+            self.txSigner.signTx(tx, self.privateKey)
 
-        return self.broadcastTx(tx)
+            return self.broadcastTx(tx)
 
     def deleteDataEntry(self, key, timestamp=0, minimalFee=500000):
-        tx = self.txGenerator.generateDeleteDataEntry(key, self.publicKey, timestamp, minimalFee)
-        self.txSigner.signTx(tx, self.privateKey)
+        if not self.privateKey:
+            msg = 'Private key required'
+            logging.error(msg)
+            self.pywaves.throw_error(msg)
+        elif not self.pywaves.OFFLINE and self.balance() < minimalFee:
+            msg = 'Insufficient Waves balance'
+            logging.error(msg)
+            self.pywaves.throw_error(msg)        
+        else:
+            tx = self.txGenerator.generateDeleteDataEntry(key, self.publicKey, timestamp, minimalFee)
+            self.txSigner.signTx(tx, self.privateKey)
 
-        return self.broadcastTx(tx)
+            return self.broadcastTx(tx)
 
     def _postOrder(self, amountAsset, priceAsset, orderType, amount, price, maxLifetime=30 * 86400, matcherFee=pywaves.DEFAULT_MATCHER_FEE, timestamp=0, matcherFeeAssetId=''):
+        if not self.privateKey:
+            msg = 'Private key required'
+            logging.error(msg)
+            self.pywaves.throw_error(msg)
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
         expiration = timestamp + maxLifetime * 1000

@@ -4,6 +4,7 @@ PYTHON_TESTS = [
     "tests/test_Alias.py",
     "tests/test_BurnAsset.py",
     "tests/test_CancelLease.py",
+    "tests/test_Data.py",
     "tests/test_IssueAsset.py",
     "tests/test_IssueSmartAsset.py",
     "tests/test_Lease.py",
