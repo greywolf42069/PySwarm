@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 PYTHON_TESTS = [
+    "tests/test_AddressCreation.py",
     "tests/test_Alias.py",
     "tests/test_BurnAsset.py",
     "tests/test_CancelLease.py",
