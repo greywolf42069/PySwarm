@@ -5,17 +5,25 @@ from pywaves import asset
 import random
 import string
 import pytest
+import os
+import base58
 
 pw.setThrowOnError(True)
+
+PYWAVES_TEST_NODE = os.getenv('PYWAVES_TEST_NODE')
+pw.setNode(PYWAVES_TEST_NODE, 'T')
 
 helpers = Helpers()
 testwallet = helpers.prepareTestcase()
 alias = ''.join(random.choices(string.ascii_lowercase, k=8))
 
+seed = str(base58.b58encode(os.urandom(32)))
+address1 = address.Address(seed=seed)
+
 try:
 
     def test_aliasWithoutPrivateKey():
-        myAddress = address.Address('3MwGH6GPcq7jiGNXgS4K6buynpLZR5LAgQm')
+        myAddress = address.Address(address1.address)
         with pytest.raises(Exception) as error:
             myAddress.createAlias(alias)
 
