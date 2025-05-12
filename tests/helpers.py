@@ -29,7 +29,7 @@ class Helpers:
         else:
             return response
 
-    def prepareTestcase(self, amount=1000000):
+    def prepareTestcase(self, amount=1000000, sendTokens=False):
         pw.setNode(PYWAVES_TEST_NODE, 'T')
         faucet = address.Address(privateKey=PYWAVES_TEST_SECRET)
         
@@ -61,9 +61,10 @@ class Helpers:
             
 
         # send some assets to testwallet
-        print(f"----- Sending assets to testwallet -----")
-        tx = faucet.sendAsset(testwallet, testtoken, 100000000)
-        self.waitFor(tx['id'])
+        if (sendTokens):
+            print(f"----- Sending assets to testwallet -----")
+            tx = faucet.sendAsset(testwallet, testtoken, 100000000)
+            self.waitFor(tx['id'])
         
         return testwallet
 

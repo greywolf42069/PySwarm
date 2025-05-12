@@ -795,7 +795,7 @@ class Address(object):
 
     def setScript(self, scriptSource, txFee=pywaves.DEFAULT_SCRIPT_FEE, timestamp=0, publicKey=None):
         script = self.pywaves.wrapper('/utils/script/compileCode', scriptSource)['script'][7:]
-
+        
         return self.setCompiledScript(script, txFee, timestamp, publicKey)
 
     def setAssetScript(self, asset, scriptSource, txFee=pywaves.DEFAULT_ASSET_SCRIPT_FEE, timestamp=0):

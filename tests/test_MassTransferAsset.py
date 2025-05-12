@@ -12,7 +12,7 @@ PYWAVES_TEST_SECRET = os.getenv('PYWAVES_TEST_SECRET')
 
 pw.setThrowOnError(True)
 helpers = Helpers()
-testwallet = helpers.prepareTestcase(101000000)
+testwallet = helpers.prepareTestcase(101000000, sendTokens=True)
 
 seed = str(base58.b58encode(os.urandom(32)))
 recipient1 = address.Address(seed=seed)

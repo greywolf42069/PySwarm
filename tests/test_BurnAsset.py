@@ -11,7 +11,7 @@ pw.setThrowOnError(True)
 pw.setNode(PYWAVES_TEST_NODE, 'T')
 
 helpers = Helpers()
-testwallet = helpers.prepareTestcase()
+testwallet = helpers.prepareTestcase(sendTokens=True)
 
 try:
     
