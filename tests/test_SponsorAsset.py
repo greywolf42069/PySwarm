@@ -36,7 +36,7 @@ try:
     def test_succesfullSponsoringAsset():
         
         tokens = testwallet.assets()
-        tx = testwallet.sponsorAsset(tokens[1], minimalFeeInAssets = 1  )
+        tx = testwallet.sponsorAsset(tokens[0], minimalFeeInAssets = 1  )
         print(tx)
         blockchainTx = helpers.waitFor(tx['id'])
 
