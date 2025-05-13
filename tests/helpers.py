@@ -69,11 +69,26 @@ class Helpers:
         return testwallet
 
     def closeTestcase(self, testwallet):
-        pw.setNode(PYWAVES_TEST_NODE, 'T')
+        pw.setNode(PYWAVES_TEST_NODE, 'T')        
         faucet = address.Address(privateKey=PYWAVES_TEST_SECRET)
+        # give time for the node to update the balance
+        time.sleep(5)
         testwalletBalance = testwallet.balance()
         print(f"Testwallet balance: {testwalletBalance}")
-        tx = testwallet.sendWaves(faucet, testwalletBalance-100000)
-        print(tx)
+    
+        res = testwallet.script()
+        print(res)
+        if (res['script'] != None):
+            txFee = 400000+100000
+        else:
+            txFee = 100000
+        amount = testwalletBalance-txFee
+        print(f"Sending {amount} waves from {testwallet.address} back to faucet, txFee: {txFee}")
+        if (amount > 0):
+            print(f"Sending...")
+            tx = testwallet.sendWaves(faucet, amount, txFee=txFee)
+            print(tx)
+            self.waitFor(tx['id'])
+
 
     
