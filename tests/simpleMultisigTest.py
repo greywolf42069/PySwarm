@@ -18,7 +18,7 @@ def test_sendWaves():
 
     generator = TxGenerator()
     signer = TxSigner()
-    tx = generator.generateSendWaves(secondAddress, 1, firstAddress.publicKey, txFee=500000)
+    tx = generator.generateSendWaves(secondAddress, 1, firstAddress.publicKey, txFee=510000)
     signer.signTx(tx, firstAddress.privateKey)
     signer.signTx(tx, secondAddress.privateKey)
 

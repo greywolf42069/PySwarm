@@ -90,3 +90,6 @@ def test_mainnetWithHugeNonce():
 
     assert str(valueError) == '<ExceptionInfo ValueError(\'Nonce must be between 0 and 4294967295\') tblen=2>'
 
+def test_resetNodetoTestnet():
+    pw.setNode(PYWAVES_TEST_NODE, 'T')
+    

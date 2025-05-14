@@ -3,27 +3,22 @@ from pywaves import address
 import pytest
 from tests.helpers import Helpers
 import os
-import base58   
 
 PYWAVES_TEST_NODE = os.getenv('PYWAVES_TEST_NODE')
-
 pw.setThrowOnError(True)
 pw.setNode(PYWAVES_TEST_NODE, 'T')
 helpers = Helpers()
-testwallet = helpers.prepareTestcase(100000000, sendTokens=True)
+testwallet = helpers.prepareTestcase(100000000)
 
-seed = str(base58.b58encode(os.urandom(32)))
-dappaddress1 = address.Address(seed=seed)
-
-# fund dappaddress1
-tx = testwallet.sendWaves(dappaddress1, 500000)
+# fund testwallet
+tx = testwallet.sendWaves(testwallet, 1000000)
 helpers.waitFor(tx['id'])
 
 try:
 
     def test_addressWithoutScript():
-        result = dappaddress1.script()
-
+        result = testwallet.script()
+        print(result)
         assert (result['script'] is None and result['extraFee'] == 0)
 
     def test_adddressWithScript():
@@ -40,11 +35,11 @@ try:
             ]
         }'''
 
-        tx = dappaddress1.setScript(script, txFee=500000)
+        tx = testwallet.setScript(script, txFee=500000)
         helpers.waitFor(tx['id'])
 
-        result = dappaddress1.script()
-
+        result = testwallet.script()
+        print(result)
         assert (result['script'].startswith('base64:') and result['extraFee'] == 0)
 
     # Dummy test case to return funds to faucet
