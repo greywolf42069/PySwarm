@@ -37,7 +37,8 @@ try:
         'let publicKey2 = base58\'' + address1.publicKey + '\'\n' \
         'let publicKey3 = base58\'' + address2.publicKey + '\'\n' \
         'let threshold = 2\n' \
-        'func verify(tx: Transaction) = {\n' \
+        '@Verifier(tx)\n' \
+        'func verify() = {\n' \
         '    let sig1Valid = if tx.proofs.size() > 0 then sigVerify(tx.bodyBytes, tx.proofs[0], publicKey1) else false\n' \
         '    let sig2Valid = if tx.proofs.size() > 1 then sigVerify(tx.bodyBytes, tx.proofs[1], publicKey2) else false\n' \
         '    let sig3Valid = if tx.proofs.size() > 2 then sigVerify(tx.bodyBytes, tx.proofs[2], publicKey3) else false\n' \
