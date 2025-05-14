@@ -13,6 +13,7 @@ PYTHON_TESTS = [
     "tests/test_Lease.py",
     "tests/test_MassTransferAsset.py",
     "tests/test_MassTransferWaves.py",
+    "tests/test_MultiSignature.py",
     "tests/test_Oracle.py",
     "tests/test_ReissueAsset.py",
     "tests/test_SendAsset.py",
@@ -20,5 +21,6 @@ PYTHON_TESTS = [
     "tests/test_SetAssetScript.py",
     "tests/test_SetScript.py",
     "tests/test_SponsorAsset.py",
+    "tests/test_Trading.py",
     "tests/test_UpdateAssetInfo.py",
 ]

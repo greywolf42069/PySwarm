@@ -15,7 +15,7 @@ DEFAULT_TX_FEE = 100000
 DEFAULT_BASE_FEE = DEFAULT_TX_FEE
 DEFAULT_SMART_FEE = 400000
 DEFAULT_ASSET_FEE = 100000000
-DEFAULT_MATCHER_FEE = 300000
+DEFAULT_MATCHER_FEE = 1000000
 DEFAULT_LEASE_FEE = 100000
 DEFAULT_ALIAS_FEE = 100000
 DEFAULT_SPONSOR_FEE = 100000000
@@ -146,9 +146,13 @@ def wrapper(api, postData='', host='', headers=''):
     if not host:
         host = NODE
     if postData:
-        req = requests.post('%s%s' % (host, api), data=postData, headers={'content-type': 'application/json'}).json()
+        url = '%s%s' % (host, api)
+        #print(f"Making POST request to: {url}")
+        req = requests.post(url, data=postData, headers={'content-type': 'application/json'}).json()
     else:
-        req = requests.get('%s%s' % (host, api), headers=headers).json()
+        url = '%s%s' % (host, api)
+        #print(f"Making GET request to: {url}")
+        req = requests.get(url, headers=headers).json()
     return req
 
 def height():

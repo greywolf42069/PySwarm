@@ -10,10 +10,6 @@ pw.setNode(PYWAVES_TEST_NODE, 'T')
 helpers = Helpers()
 testwallet = helpers.prepareTestcase(100000000)
 
-# fund testwallet
-tx = testwallet.sendWaves(testwallet, 1000000)
-helpers.waitFor(tx['id'])
-
 try:
 
     def test_addressWithoutScript():
