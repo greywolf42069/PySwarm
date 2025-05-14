@@ -16,26 +16,18 @@ testwallet = helpers.prepareTestcase(sendTokens=True)
 try:
     
     def test_succesfullBurnAsset():
-        print("----- test_succesfullBurnAsset -----")
-        token = testwallet.assets()
-        if len(token) == 0:
-            raise Exception("No assets found")
-        token = asset.Asset(token[0])
-
-        txId = testwallet.burnAsset(token, 1)
-        blockchaintx = helpers.waitFor(txId)
+        tokens = testwallet.assets()
+        myToken = asset.Asset(tokens[0])
+        tx = testwallet.burnAsset(myToken, 1)
+        blockchaintx = helpers.waitFor(tx['id'])
         
-        assert blockchaintx['id'] == txId
+        assert blockchaintx['id'] == tx['id']
         
     def test_pywavesOfflineBurnAsset():
-        print("----- test_pywavesOfflineBurnAsset -----")
-        token = testwallet.assets()
-        if len(token) == 0:
-            raise Exception("No assets found")
-        token = token[0]
-        token = asset.Asset(token[0])
+        tokens = testwallet.assets()
+        myToken = asset.Asset(tokens[0])
         pw.setOffline()       
-        tx = testwallet.burnAsset(token, 1)
+        tx = testwallet.burnAsset(myToken, 1)
         pw.setOnline()
 
         assert tx['api-type'] == 'POST'

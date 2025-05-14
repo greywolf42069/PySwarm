@@ -343,12 +343,8 @@ class Address(object):
 
         tx = self.txGenerator.generateBurnAsset(asset, quantity, self.publicKey, txFee, timestamp)
         self.txSigner.signTx(tx, self.privateKey)
-        req = self.broadcastTx(tx)
-        if self.pywaves.OFFLINE:
-            return req
-        else:
-            return req.get('id', 'ERROR')
-
+        return self.broadcastTx(tx)
+        
     def broadcastTx(self, tx):
         data = json.dumps(tx)
 
