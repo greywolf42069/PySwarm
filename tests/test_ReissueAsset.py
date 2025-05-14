@@ -20,10 +20,10 @@ assets = faucet.assets()
 myToken = asset.Asset(assets[0])
 
 def test_succesfullReissueAsset():
-    txId = faucet.reissueAsset(myToken, 10, reissuable=True)
-    blockchaintx = helpers.waitFor(txId)
+    tx = faucet.reissueAsset(myToken, 10, reissuable=True)
+    blockchaintx = helpers.waitFor(tx['id'])
 
-    assert blockchaintx['id'] == txId
+    assert blockchaintx['id'] == tx['id']
 
 def test_reissueAssetPywavesOffline():   
     pw.setOffline()
