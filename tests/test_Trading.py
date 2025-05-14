@@ -10,7 +10,7 @@ import string
 import time
 
 PYWAVES_TEST_NODE = os.getenv('PYWAVES_TEST_NODE')
-PYWAVES_TEST_MATCHER = os.getenv('PYWAVES_TEST_MATCHER')
+PYWAVES_TEST_MATCHER = 'https://testnet.waves.exchange/api/v1/forward/matcher'
 
 pw.setThrowOnError(True)
 pw.setNode(PYWAVES_TEST_NODE, 'T')
