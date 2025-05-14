@@ -205,9 +205,3 @@ def validateAddress(address):
     else:
         return True
     return False
-
-WAVES = Asset('')
-BTC = Asset('8LQW8f7P5d5PZM7GtZEBgaqRPGSzS3DfPuiXrURJ4AJS')
-USD = Asset('Ft8X1v1LTa1ABafufpaCWyVj8KkaxUWE6xBhW6sNFJck')
-
-
