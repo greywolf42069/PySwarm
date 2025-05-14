@@ -824,13 +824,7 @@ class Address(object):
 
             tx = self.txGenerator.generateIssueSmartAsset(name, description, quantity, scriptSource, self.publicKey, decimals, reissuable, txFee, timestamp)
             self.txSigner.signTx(tx, self.privateKey)
-            res = self.broadcastTx(tx)
-            
-            if self.pywaves.OFFLINE:
-                return res
-            else:
-                return pywaves.Asset(res['assetId'], self.pywaves)
-            
+            return self.broadcastTx(tx)
 
     def invokeScript(self, dappAddress, functionName, params = [], payments = [], feeAsset=None, txFee=pywaves.DEFAULT_INVOKE_SCRIPT_FEE, publicKey=None, timestamp=0):
         if not self.privateKey:

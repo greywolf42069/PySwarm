@@ -51,12 +51,12 @@ try:
                 '  case _ => true\n' + \
                 '}'
         assetWithScriptName = ''.join(random.choices(string.ascii_lowercase, k=8))
-        assetWithScript = testwallet.issueSmartAsset(assetWithScriptName, 'This is just a test smart asset', 10000000, scriptSource = script)
-        while not assetWithScript.status():
-            pass
+        tx = testwallet.issueSmartAsset(assetWithScriptName, 'This is just a test smart asset', 10000000, scriptSource = script)
 
-        tx = testwallet.setAssetScript(assetWithScript, script)
-        print(tx)
+        helpers.waitFor(tx['id'])
+        assetWithScript = asset.Asset(tx['id'])
+        
+        tx = testwallet.setAssetScript(assetWithScript, script)        
         blockchainTx = helpers.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']

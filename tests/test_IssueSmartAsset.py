@@ -55,11 +55,11 @@ try:
         script = 'match tx { \n' + \
                 'case _ => true\n' + \
                 '}'
-        token = testwallet.issueSmartAsset(assetName, 'This is just a test smart asset', 100, scriptSource=script, decimals=8, reissuable=True)
-
-        while not token.status():
-            pass
-
+        tx = testwallet.issueSmartAsset(assetName, 'This is just a test smart asset', 100, scriptSource=script, decimals=8, reissuable=True)
+        helpers.waitFor(tx['id'])
+        print(tx)
+        token = asset.Asset(tx['id'])
+        
         assert token.status() == 'Issued'
         assert token.name == assetName.encode('ascii', 'ignore')
         assert token.description == "This is just a test smart asset".encode('ascii', 'ignore')
