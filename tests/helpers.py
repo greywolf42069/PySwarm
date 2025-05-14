@@ -49,7 +49,8 @@ class Helpers:
         # check it faucet has test asset
         assets = faucet.assets()
         if (len(assets) == 0):
-            testtoken = faucet.issueAsset('pw_testasset-3', f"Test Token", 10000000*(10**8), 8, reissuable=True)
+            tx = faucet.issueAsset('pw_testasset-3', f"Test Token", 10000000*(10**8), 8, reissuable=True)
+            testtoken = asset.Asset(tx['id'])
             while not testtoken.status():
                 pass
             # sponsor asset           

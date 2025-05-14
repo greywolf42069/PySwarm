@@ -33,9 +33,9 @@ try:
 
     def test_assetScriptOnAnAssetWithoutScript():
         assetWithoutScriptName = ''.join(random.choices(string.ascii_lowercase, k=8))
-        assetWithoutScript = testwallet.issueAsset(assetWithoutScriptName, 'This is just a Test asset', 10000000)
-        while not assetWithoutScript.status():
-            pass
+        tx = testwallet.issueAsset(assetWithoutScriptName, 'This is just a Test asset', 10000000)
+        assetWithoutScript = asset.Asset(tx['id'])
+        helpers.waitFor(tx['id'])
 
         script = 'match tx { \n' + \
                 '  case _ => true\n' + \

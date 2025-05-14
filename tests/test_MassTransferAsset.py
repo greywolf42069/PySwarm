@@ -33,9 +33,9 @@ smartAssetName = ''.join(random.choices(string.ascii_lowercase, k=8))
 script = 'match tx { \n' + \
                 'case _ => true\n' + \
                 '}'
-mySmartAsset = testwallet.issueAsset(smartAssetName, f"Test Token {smartAssetName}", 100, 8, reissuable=True)
-while not mySmartAsset.status():
-    pass
+tx = testwallet.issueAsset(smartAssetName, f"Test Token {smartAssetName}", 100, 8, reissuable=True)
+helpers.waitFor(tx['id'])
+mySmartAsset = asset.Asset(tx['id'])
 
 try:
     def test_assetMassTransferWithoutPrivateKey():

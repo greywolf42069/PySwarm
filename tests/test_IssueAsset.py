@@ -19,14 +19,14 @@ try:
 
     def test_issueAssetWithoutPrivateKey():
         with pytest.raises(Exception) as error:
-            myAdress = address.Address('3MwGH6GPcq7jiGNXgS4K6buynpLZR5LAgQm')
-            myAdress.issueAsset('Test2','This is just another test asset', 100000, 1)
+            myAddress = address.Address('3MwGH6GPcq7jiGNXgS4K6buynpLZR5LAgQm')
+            tx = myAddress.issueAsset('Test2','This is just another test asset', 100000, 1)
 
         assert str(error) == '<ExceptionInfo PyWavesException(\'Private key required\') tblen=3>'
 
     def test_issueAssetWithTooShortName():
         with pytest.raises(Exception) as error:
-            testwallet.issueAsset('Tes','This is just another test asset', 100000, 1)
+            tx = testwallet.issueAsset('Tes','This is just another test asset', 100000, 1)
 
         assert str(error) == '<ExceptionInfo PyWavesException(\'Asset name must be between 4 and 16 characters long\') tblen=3>'
 
@@ -39,14 +39,14 @@ try:
 
     def test_issueAssetWithTooLongName():
         with pytest.raises(Exception) as error:
-            testwallet.issueAsset('12345678912345678','This is just another test asset', 100000, 1)
+            tx = testwallet.issueAsset('12345678912345678','This is just another test asset', 100000, 1)
 
         assert str(error) == '<ExceptionInfo PyWavesException(\'Asset name must be between 4 and 16 characters long\') tblen=3>'
 
     def test_successfulIssueAsset():
-        token = testwallet.issueAsset(NAME, f"Test Token {NAME}", 100, 8, reissuable=True)
-        while not token.status():
-            pass
+        tx = testwallet.issueAsset(NAME, f"Test Token {NAME}", 100, 8, reissuable=True)
+        helpers.waitFor(tx['id'])
+        token = asset.Asset(tx['id'])
         
         assert token.status() == 'Issued'
         assert token.name == NAME.encode('ascii', 'ignore')

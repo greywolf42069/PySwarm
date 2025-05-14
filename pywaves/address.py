@@ -327,12 +327,8 @@ class Address(object):
                 timestamp = int(time.time() * 1000)
             tx = self.txGenerator.generateIssueAsset(name, description, quantity, self.publicKey, decimals, reissuable, txFee, timestamp)
             self.txSigner.signTx(tx, self.privateKey)
-            req = self.broadcastTx(tx)
-            if self.pywaves.OFFLINE:
-                return req
-            else:
-                return pywaves.Asset(req['assetId'], self.pywaves)
-
+            return self.broadcastTx(tx)
+            
     def reissueAsset(self, asset, quantity, reissuable=False, txFee=pywaves.DEFAULT_TX_FEE, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
