@@ -1,20 +1,19 @@
-import pywaves
+import pywaves as pw
 import pywaves.crypto as crypto
 import time
 import json
 import base64
-import base58
 
 class TxGenerator:
 
-    def __init__(self, pywaves=pywaves):
+    def __init__(self, pywaves=pw):
         self.pywaves = pywaves
 
-    def generateSendWaves(self, recipient, amount, publicKey, attachment='', txFee=pywaves.DEFAULT_TX_FEE, timestamp=0):
+    def generateSendWaves(self, recipient, amount, publicKey, attachment='', txFee=pw.DEFAULT_TX_FEE, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
-        attachment = base58.b58encode(crypto.str2bytes(attachment))
+        attachment = pw.b58encode(crypto.str2bytes(attachment))
         tx = {
             "type": 4,
             "version": 3,
@@ -29,14 +28,14 @@ class TxGenerator:
 
         return tx
 
-    def generateSendAsset(self, recipient, asset, amount, publicKey, attachment='', feeAsset='', txFee=pywaves.DEFAULT_TX_FEE, timestamp=0):
+    def generateSendAsset(self, recipient, asset, amount, publicKey, attachment='', feeAsset='', txFee=pw.DEFAULT_TX_FEE, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
         if (feeAsset != '' and feeAsset != None):
             feeAsset = feeAsset.assetId
         asset = asset.assetId
-        attachment = base58.b58encode(crypto.str2bytes(attachment))
+        attachment = pw.b58encode(crypto.str2bytes(attachment))
         tx = {
             "version": 3,
             "type": 4,
@@ -53,7 +52,7 @@ class TxGenerator:
 
         return tx
 
-    def generateIssueAsset(self, name, description, quantity, publicKey, decimals=0, reissuable=False, txFee=pywaves.DEFAULT_ASSET_FEE, timestamp=0):
+    def generateIssueAsset(self, name, description, quantity, publicKey, decimals=0, reissuable=False, txFee=pw.DEFAULT_ASSET_FEE, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
@@ -73,7 +72,7 @@ class TxGenerator:
 
         return tx
 
-    def generateIssueSmartAsset(self, name, description, quantity, scriptSource, publicKey, decimals=0, reissuable=False, txFee=pywaves.DEFAULT_ASSET_FEE, timestamp=0):
+    def generateIssueSmartAsset(self, name, description, quantity, scriptSource, publicKey, decimals=0, reissuable=False, txFee=pw.DEFAULT_ASSET_FEE, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
@@ -95,7 +94,7 @@ class TxGenerator:
 
         return tx
 
-    def generateReissueAsset(self, asset, quantity, publicKey, reissuable=False, txFee=pywaves.DEFAULT_TX_FEE, timestamp=0):
+    def generateReissueAsset(self, asset, quantity, publicKey, reissuable=False, txFee=pw.DEFAULT_TX_FEE, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
@@ -113,7 +112,7 @@ class TxGenerator:
 
         return tx
 
-    def generateBurnAsset(self, asset, quantity, publicKey, txFee=pywaves.DEFAULT_TX_FEE, timestamp=0):
+    def generateBurnAsset(self, asset, quantity, publicKey, txFee=pw.DEFAULT_TX_FEE, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
@@ -130,10 +129,10 @@ class TxGenerator:
 
         return tx
 
-    def generateMassTransferWaves(self, transfers, publicKey, attachment='', timestamp=0, txFee=pywaves.DEFAULT_BASE_FEE):
+    def generateMassTransferWaves(self, transfers, publicKey, attachment='', timestamp=0, txFee=pw.DEFAULT_BASE_FEE):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
-        attachment = base58.b58encode(crypto.str2bytes(attachment))
+        attachment = pw.b58encode(crypto.str2bytes(attachment))
 
         tx = {
             "type": 11,
@@ -149,10 +148,10 @@ class TxGenerator:
 
         return tx
 
-    def generateMassTransferAssets(self, transfers, asset, publicKey, attachment='', timestamp=0, txFee=pywaves.DEFAULT_BASE_FEE):
+    def generateMassTransferAssets(self, transfers, asset, publicKey, attachment='', timestamp=0, txFee=pw.DEFAULT_BASE_FEE):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
-        attachment = base58.b58encode(crypto.str2bytes(attachment))
+        attachment = pw.b58encode(crypto.str2bytes(attachment))
 
         tx = {
             "type": 11,
@@ -168,7 +167,7 @@ class TxGenerator:
 
         return tx
 
-    def generateLease(self, recipient, amount, publicKey, txFee=pywaves.DEFAULT_LEASE_FEE, timestamp=0):
+    def generateLease(self, recipient, amount, publicKey, txFee=pw.DEFAULT_LEASE_FEE, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
@@ -185,7 +184,7 @@ class TxGenerator:
 
         return tx
 
-    def generateLeaseCancel(self, leaseId, publicKey, txFee=pywaves.DEFAULT_LEASE_FEE, timestamp=0):
+    def generateLeaseCancel(self, leaseId, publicKey, txFee=pw.DEFAULT_LEASE_FEE, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
@@ -201,7 +200,7 @@ class TxGenerator:
 
         return tx
 
-    def generateAlias(self, alias, publicKey, txFee=pywaves.DEFAULT_ALIAS_FEE, timestamp=0):
+    def generateAlias(self, alias, publicKey, txFee=pw.DEFAULT_ALIAS_FEE, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
@@ -217,7 +216,7 @@ class TxGenerator:
 
         return tx
 
-    def generateSponsorAsset(self, assetId, minimalFeeInAssets, publicKey, txFee=pywaves.DEFAULT_SPONSOR_FEE, timestamp=0):
+    def generateSponsorAsset(self, assetId, minimalFeeInAssets, publicKey, txFee=pw.DEFAULT_SPONSOR_FEE, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
@@ -234,7 +233,7 @@ class TxGenerator:
 
         return tx
 
-    def generateSetScript(self, script, publicKey, txFee=pywaves.DEFAULT_SCRIPT_FEE, timestamp=0):
+    def generateSetScript(self, script, publicKey, txFee=pw.DEFAULT_SCRIPT_FEE, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
@@ -251,7 +250,7 @@ class TxGenerator:
 
         return tx
 
-    def generateDatatransaction(self, data, publicKey, timestamp=0, baseFee=pywaves.DEFAULT_BASE_FEE, minimalFee=500000):
+    def generateDatatransaction(self, data, publicKey, timestamp=0, baseFee=pw.DEFAULT_BASE_FEE, minimalFee=500000):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
@@ -319,7 +318,7 @@ class TxGenerator:
 
         return tx
 
-    def generateSetAssetScript(self, asset, scriptSource, publicKey, txFee=pywaves.DEFAULT_ASSET_SCRIPT_FEE, timestamp=0):
+    def generateSetAssetScript(self, asset, scriptSource, publicKey, txFee=pw.DEFAULT_ASSET_SCRIPT_FEE, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
@@ -356,7 +355,7 @@ class TxGenerator:
 
         return tx
 
-    def generateInvokeScript(self, dappAddress, functionName, publicKey, params = [], payments = [], feeAsset=None, txFee=pywaves.DEFAULT_INVOKE_SCRIPT_FEE, timestamp=0):
+    def generateInvokeScript(self, dappAddress, functionName, publicKey, params = [], payments = [], feeAsset=None, txFee=pw.DEFAULT_INVOKE_SCRIPT_FEE, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
         tx = {

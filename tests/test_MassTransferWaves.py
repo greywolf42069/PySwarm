@@ -3,16 +3,15 @@ import pywaves as pw
 from pywaves import address
 from pywaves import asset
 import pytest
-import base58
 import os
 
 pw.setThrowOnError(True)
 helpers = Helpers()
 testwallet = helpers.prepareTestcase()
 
-seed = str(base58.b58encode(os.urandom(32)))
+seed = pw.b58encode(os.urandom(32))
 recipient1 = address.Address(seed=seed)
-seed = str(base58.b58encode(os.urandom(32)))
+seed = pw.b58encode(os.urandom(32))
 recipient2 = address.Address(seed=seed)
 
 try:

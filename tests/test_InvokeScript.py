@@ -3,7 +3,6 @@ import pywaves as pw
 from pywaves import address
 from pywaves import asset
 import pytest
-import base58
 import os  
 
 
@@ -14,10 +13,10 @@ pw.setNode(PYWAVES_TEST_NODE, 'T')
 helpers = Helpers()
 testwallet = helpers.prepareTestcase(100000000, sendTokens=True)
 
-seed = str(base58.b58encode(os.urandom(32)))
+seed = pw.b58encode(os.urandom(32))
 address1 = address.Address(seed=seed)
 
-seed = str(base58.b58encode(os.urandom(32)))
+seed = pw.b58encode(os.urandom(32))
 dappaddress1 = address.Address(seed=seed)
 
 # fund dappaddress1

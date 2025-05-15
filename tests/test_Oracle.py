@@ -1,12 +1,7 @@
 from tests.helpers import Helpers
 import pywaves as pw
-from pywaves import address
-from pywaves import asset
-from pywaves import oracle
 from pywaves.oracle import Oracle
 import os  
-import base58
-
 
 PYWAVES_TEST_NODE = os.getenv('PYWAVES_TEST_NODE')
 

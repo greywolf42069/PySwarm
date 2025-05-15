@@ -1,10 +1,6 @@
 from tests.helpers import Helpers
 import pywaves as pw
 from pywaves import address
-from pywaves import asset
-import base58
-import pywaves.crypto as crypto
-import pytest
 
 pw.setThrowOnError(True)
 

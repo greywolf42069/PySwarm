@@ -1,12 +1,10 @@
 from tests.helpers import Helpers
 import pywaves as pw
 from pywaves import address
-from pywaves import asset
 import random
 import string
 import pytest
 import os
-import base58
 
 pw.setThrowOnError(True)
 
@@ -17,7 +15,7 @@ helpers = Helpers()
 testwallet = helpers.prepareTestcase()
 alias = ''.join(random.choices(string.ascii_lowercase, k=8))
 
-seed = str(base58.b58encode(os.urandom(32)))
+seed = pw.b58encode(os.urandom(32))
 address1 = address.Address(seed=seed)
 
 try:

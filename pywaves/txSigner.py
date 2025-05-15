@@ -1,4 +1,3 @@
-import base58
 import base64
 import struct
 import pywaves as pw
@@ -55,22 +54,22 @@ class TxSigner:
         transferTx = transaction_pb2.TransferTransactionData()
 
         recipient = recipient_pb2.Recipient()
-        recipient.public_key_hash = base58.b58decode(tx['recipient'])[2:22]
+        recipient.public_key_hash = pw.b58decode(tx['recipient'])[2:22]
         transferTx.recipient.CopyFrom(recipient)
         amount = amount_pb2.Amount()
         amount.amount = tx['amount']
         if not ('assetId' not in tx or tx['assetId'] == 'null'):
-            amount.asset_id = base58.b58decode(tx['assetId'])
+            amount.asset_id = pw.b58decode(tx['assetId'])
         transferTx.amount.CopyFrom(amount)
-        transferTx.attachment = base58.b58decode(tx['attachment'])
+        transferTx.attachment = pw.b58decode(tx['attachment'])
 
         txFee = amount_pb2.Amount()
         txFee.amount = tx['fee']
         if 'feeAssetId' in tx and tx['feeAssetId'] != '' and tx['feeAssetId'] != 'null' and tx['feeAssetId'] != None:
-            txFee.asset_id = base58.b58decode(tx['feeAssetId'])
+            txFee.asset_id = pw.b58decode(tx['feeAssetId'])
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(txFee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']
@@ -83,24 +82,24 @@ class TxSigner:
         transferTx = transaction_pb2.TransferTransactionData()
 
         recipient = recipient_pb2.Recipient()
-        recipient.public_key_hash = base58.b58decode(tx['recipient'])[2:22]
+        recipient.public_key_hash = pw.b58decode(tx['recipient'])[2:22]
         transferTx.recipient.CopyFrom(recipient)
         amount = amount_pb2.Amount()
         amount.amount = tx['amount']
         if not ('assetId' not in tx or tx['assetId'] == 'null' or tx['assetId'] == None or tx['assetId'] == ''):
-            amount.asset_id = base58.b58decode(tx['assetId'])
+            amount.asset_id = pw.b58decode(tx['assetId'])
         transferTx.amount.CopyFrom(amount)
 
         if 'attachment' in tx and tx['attachment'] != '':
-            transferTx.attachment = base58.b58decode(tx['attachment'])
+            transferTx.attachment = pw.b58decode(tx['attachment'])
 
         txFee = amount_pb2.Amount()
         txFee.amount = tx['fee']
         if 'feeAssetId' in tx and tx['feeAssetId'] != '' and tx['feeAssetId'] != 'null' and tx['feeAssetId'] != None:
-            txFee.asset_id = base58.b58decode(tx['feeAssetId'])
+            txFee.asset_id = pw.b58decode(tx['feeAssetId'])
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(txFee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']
@@ -123,7 +122,7 @@ class TxSigner:
         txFee.amount = tx['fee']
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(txFee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']
@@ -147,7 +146,7 @@ class TxSigner:
         txFee.amount = tx['fee']
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(txFee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']
@@ -161,7 +160,7 @@ class TxSigner:
 
         newAssetAmount = amount_pb2.Amount()
         newAssetAmount.amount = tx['quantity']
-        newAssetAmount.asset_id = base58.b58decode(tx['assetId'])
+        newAssetAmount.asset_id = pw.b58decode(tx['assetId'])
         reissueTx.asset_amount.CopyFrom(newAssetAmount)
         reissueTx.reissuable = tx['reissuable']
 
@@ -169,7 +168,7 @@ class TxSigner:
         txFee.amount = tx['fee']
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(txFee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']
@@ -183,14 +182,14 @@ class TxSigner:
 
         newAssetAmount = amount_pb2.Amount()
         newAssetAmount.amount = tx['quantity']
-        newAssetAmount.asset_id = base58.b58decode(tx['assetId'])
+        newAssetAmount.asset_id = pw.b58decode(tx['assetId'])
         burnTx.asset_amount.CopyFrom(newAssetAmount)
 
         txFee = amount_pb2.Amount()
         txFee.amount = tx['fee']
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(txFee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']
@@ -203,7 +202,7 @@ class TxSigner:
         leaseTx = transaction_pb2.LeaseTransactionData()
 
         recipient = recipient_pb2.Recipient()
-        recipient.public_key_hash = base58.b58decode(tx['recipient'])[2:22]
+        recipient.public_key_hash = pw.b58decode(tx['recipient'])[2:22]
         leaseTx.recipient.CopyFrom(recipient)
         leaseTx.amount = tx['amount']
 
@@ -211,7 +210,7 @@ class TxSigner:
         txFee.amount = tx['fee']
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(txFee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']
@@ -223,13 +222,13 @@ class TxSigner:
     def signType09Tx(self, tx, privateKey):
         leaseCancelTx = transaction_pb2.LeaseCancelTransactionData()
 
-        leaseCancelTx.lease_id = base58.b58decode(tx['txId'])
+        leaseCancelTx.lease_id = pw.b58decode(tx['txId'])
 
         txFee = amount_pb2.Amount()
         txFee.amount = tx['fee']
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(txFee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']
@@ -249,7 +248,7 @@ class TxSigner:
         txFee.amount = tx['fee']
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(txFee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']
@@ -260,16 +259,16 @@ class TxSigner:
 
     def signType11TxWaves(self, tx, privateKey):
         massTransferTx = transaction_pb2.MassTransferTransactionData()
-        massTransferTx.asset_id = base58.b58decode(tx['assetId'])
+        massTransferTx.asset_id = pw.b58decode(tx['assetId'])
 
         if 'attachment' in tx and tx['attachment'] != '':
             attachment = transaction_pb2.Attachment()
-            attachment.string_value = base58.b58decode(tx['attachment'])
+            attachment.string_value = pw.b58decode(tx['attachment'])
             massTransferTx.attachment.CopyFrom(attachment)
 
         for transfer in tx['transfers']:
             recipient = recipient_pb2.Recipient()
-            recipient.public_key_hash = base58.b58decode(transfer['recipient'])[2:22]
+            recipient.public_key_hash = pw.b58decode(transfer['recipient'])[2:22]
             transferObject = transaction_pb2.MassTransferTransactionData.Transfer()
             transferObject.recipient.CopyFrom(recipient)
             transferObject.amount = transfer['amount']
@@ -278,7 +277,7 @@ class TxSigner:
         txFee.amount = tx['fee']
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(txFee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']
@@ -289,16 +288,16 @@ class TxSigner:
 
     def signType11TxAssets(self, tx, privateKey):
         massTransferTx = transaction_pb2.MassTransferTransactionData()
-        massTransferTx.asset_id = base58.b58decode(tx['assetId'])
+        massTransferTx.asset_id = pw.b58decode(tx['assetId'])
 
         if 'attachment' in tx and tx['attachment'] != '':
             attachment = transaction_pb2.Attachment()
-            attachment.string_value = base58.b58decode(tx['attachment'])
+            attachment.string_value = pw.b58decode(tx['attachment'])
             massTransferTx.attachment.CopyFrom(attachment)
 
         for transfer in tx['transfers']:
             recipient = recipient_pb2.Recipient()
-            recipient.public_key_hash = base58.b58decode(transfer['recipient'])[2:22]
+            recipient.public_key_hash = pw.b58decode(transfer['recipient'])[2:22]
             transferObject = transaction_pb2.MassTransferTransactionData.Transfer()
             transferObject.recipient.CopyFrom(recipient)
             transferObject.amount = transfer['amount']
@@ -307,7 +306,7 @@ class TxSigner:
         txFee.amount = tx['fee']
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(txFee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']
@@ -328,7 +327,7 @@ class TxSigner:
         txFee.amount = tx['fee']
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(txFee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']
@@ -359,7 +358,7 @@ class TxSigner:
         txFee.amount = tx['fee']
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(txFee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']
@@ -373,14 +372,14 @@ class TxSigner:
 
         minFee = amount_pb2.Amount()
         minFee.amount = tx['minSponsoredAssetFee']
-        minFee.asset_id = base58.b58decode(tx['assetId'])
+        minFee.asset_id = pw.b58decode(tx['assetId'])
         sponsorTx.min_fee.CopyFrom(minFee)
 
         txFee = amount_pb2.Amount()
         txFee.amount = tx['fee']
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(txFee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']
@@ -396,7 +395,7 @@ class TxSigner:
         tx_fee.amount = tx['fee']
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(tx_fee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']
@@ -409,12 +408,12 @@ class TxSigner:
         compiledScript = base64.b64decode(tx['script'][7:])
         setAssetScriptTransaction = transaction_pb2.SetAssetScriptTransactionData()
         setAssetScriptTransaction.script = compiledScript
-        setAssetScriptTransaction.asset_id = base58.b58decode(tx['assetId'])
+        setAssetScriptTransaction.asset_id = pw.b58decode(tx['assetId'])
         tx_fee = amount_pb2.Amount()
         tx_fee.amount = tx['fee']
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(tx_fee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']
@@ -424,7 +423,7 @@ class TxSigner:
         tx['proofs'].append(proof)
 
     def signType17Tx(self, tx, privateKey):
-        decodedAssetId = base58.b58decode(tx['assetId'])
+        decodedAssetId = pw.b58decode(tx['assetId'])
         updateInfo = transaction_pb2.UpdateAssetInfoTransactionData()
         updateInfo.asset_id = decodedAssetId
         updateInfo.name = tx['name']
@@ -433,7 +432,7 @@ class TxSigner:
         txFee.amount = tx['fee']
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(txFee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']
@@ -481,11 +480,11 @@ class TxSigner:
             amount = amount_pb2.Amount()
             amount.amount = payment['amount']
             if not ('assetId' not in payment or payment['assetId'] == 'null' or payment['assetId'] == None or payment['assetId'] == ''):
-                amount.asset_id = base58.b58decode(payment['assetId'])
+                amount.asset_id = pw.b58decode(payment['assetId'])
             invoke.payments.append(amount)
 
         dApp = recipient_pb2.Recipient()
-        dApp.public_key_hash = base58.b58decode(tx['dApp'])[2:22]
+        dApp.public_key_hash = pw.b58decode(tx['dApp'])[2:22]
         if 'call' in tx:
             invoke.function_call = b'\x01' + \
                     b'\x09' + \
@@ -501,10 +500,10 @@ class TxSigner:
         txFee = amount_pb2.Amount()
         txFee.amount = tx['fee']
         if 'feeAssetId' in tx and tx['feeAssetId'] != '' and tx['feeAssetId'] != 'null' and tx['feeAssetId'] != None:
-            txFee.asset_id = base58.b58decode(tx['feeAssetId'])
+            txFee.asset_id = pw.b58decode(tx['feeAssetId'])
         transaction = transaction_pb2.Transaction()
         transaction.chain_id = ord(self.pywaves.CHAIN_ID)
-        transaction.sender_public_key = base58.b58decode(tx['senderPublicKey'])
+        transaction.sender_public_key = pw.b58decode(tx['senderPublicKey'])
         transaction.fee.CopyFrom(txFee)
         transaction.timestamp = tx['timestamp']
         transaction.version = tx['version']

@@ -178,7 +178,7 @@ class ParallelPyWaves(object):
         #return self.wrapper('/api/markets', host=self.DATAFEED)
 
     def validateAddress(self, address):
-        addr = crypto.bytes2str(base58.b58decode(address))
+        addr = crypto.bytes2str(pw.b58decode(address))
         if addr[0] != chr(self.ADDRESS_VERSION):
             logging.error("Wrong address version")
         elif addr[1] != self.CHAIN_ID:

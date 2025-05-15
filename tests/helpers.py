@@ -2,7 +2,6 @@ import os
 import pywaves as pw
 import requests
 import time
-import base58
 from pywaves import address
 from pywaves import asset
 
@@ -34,7 +33,7 @@ class Helpers:
         faucet = address.Address(privateKey=PYWAVES_TEST_SECRET)
         
         # generate a random address using 32 random bytes converted to base58
-        seed = str(base58.b58encode(os.urandom(32)))
+        seed = pw.b58encode(os.urandom(32))
         print(f"Using seed: {seed}")
         testwallet = address.Address(seed=seed)
         print(f"Operating on address: {testwallet.address}")

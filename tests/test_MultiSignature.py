@@ -5,8 +5,6 @@ from pywaves import asset
 import pywaves.crypto as crypto
 from pywaves.txSigner import TxSigner
 from pywaves.txGenerator import TxGenerator
-import base58
-import pytest
 import os
 
 PYWAVES_TEST_NODE = os.getenv('PYWAVES_TEST_NODE')
@@ -17,13 +15,13 @@ pw.setNode(PYWAVES_TEST_NODE, 'T')
 helpers = Helpers()
 testwallet = helpers.prepareTestcase(200000000)
 
-seed = str(base58.b58encode(os.urandom(32)))
+seed = pw.b58encode(os.urandom(32))
 multisigAddress = address.Address(seed=seed)
 print(seed)
-seed = str(base58.b58encode(os.urandom(32)))
+seed = pw.b58encode(os.urandom(32))
 address1 = address.Address(seed=seed)
 
-seed = str(base58.b58encode(os.urandom(32)))
+seed = pw.b58encode(os.urandom(32))
 address2 = address.Address(seed=seed)
 
 try:

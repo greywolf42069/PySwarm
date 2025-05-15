@@ -1,6 +1,6 @@
 import hashlib
 import pywaves_curve25519 as curve
-import base58
+import pywaves as pw
 import os
 from math import log
 from operator import xor
@@ -264,11 +264,11 @@ def hashChain(s):
 def sign(privateKey, message):
     random64 = os.urandom(64)
 
-    return base58.b58encode(curve.calculateSignature(random64, base58.b58decode(privateKey), message))
+    return pw.b58encode(curve.calculateSignature(random64, pw.b58decode(privateKey), message))
 
 def id(message):
-    return base58.b58encode(hashlib.sha256(message).digest())
+    return pw.b58encode(hashlib.sha256(message).digest())
 
 def verify_signature(pub_key, message, signature):
     """ all of the arguments are expected in a string format """
-    return curve.verifySignature(base58.b58decode(pub_key), message.encode(), base58.b58decode(signature)) == 0
+    return curve.verifySignature(pw.b58decode(pub_key), message.encode(), pw.b58decode(signature)) == 0
