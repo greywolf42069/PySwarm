@@ -3,7 +3,6 @@ import pywaves as pw
 from pywaves import address
 from pywaves import asset
 import pytest
-import base58
 import os
 import random
 import string
@@ -14,16 +13,16 @@ pw.setThrowOnError(True)
 helpers = Helpers()
 testwallet = helpers.prepareTestcase(101000000, sendTokens=True)
 
-seed = str(base58.b58encode(os.urandom(32)))
+seed = pw.b58encode(os.urandom(32))
 recipient1 = address.Address(seed=seed)
-seed = str(base58.b58encode(os.urandom(32)))
+seed = pw.b58encode(os.urandom(32))
 recipient2 = address.Address(seed=seed)
 # use test asset
 faucet = address.Address(privateKey=PYWAVES_TEST_SECRET)
 assets = faucet.assets()
 myToken = asset.Asset(assets[0])
 # create an address with no balance
-seed = str(base58.b58encode(os.urandom(32)))
+seed = pw.b58encode(os.urandom(32))
 addressWithNoBalance = address.Address(seed=seed)
 # add an extra 1 wves funding to the testwallet
 

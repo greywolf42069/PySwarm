@@ -4,18 +4,17 @@ from pywaves import address
 from pywaves import asset
 import pytest
 import os
-import base58
 
 pw.setThrowOnError(True)
 
 helpers = Helpers()
 testwallet = helpers.prepareTestcase()
 
-seed = str(base58.b58encode(os.urandom(32)))
+seed = pw.b58encode(os.urandom(32))
 leasingAddress = address.Address(seed=seed)
-seed = str(base58.b58encode(os.urandom(32)))
+seed = pw.b58encode(os.urandom(32))
 leasingAddressWithNoBalance = address.Address(seed=seed)
-leasingId = str(base58.b58encode(os.urandom(32)))
+leasingId = pw.b58encode(os.urandom(32))
 
 try:
 

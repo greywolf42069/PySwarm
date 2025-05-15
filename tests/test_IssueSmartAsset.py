@@ -4,8 +4,6 @@ from pywaves import address
 from pywaves import asset
 import pytest
 import os
-import time
-import base58
 import random
 import string
 
@@ -15,7 +13,7 @@ pw.setThrowOnError(True)
 pw.setNode(PYWAVES_TEST_NODE, 'T')
 helpers = Helpers()
 
-seed = str(base58.b58encode(os.urandom(32)))
+seed = pw.b58encode(os.urandom(32))
 address1 = address.Address(seed=seed)
 
 assetName = ''.join(random.choices(string.ascii_lowercase, k=8))

@@ -4,7 +4,6 @@ from pywaves import address
 from pywaves import asset
 import pytest
 import os
-import base58
 
 PYWAVES_TEST_NODE = os.getenv('PYWAVES_TEST_NODE')
 
@@ -14,7 +13,7 @@ pw.setNode(PYWAVES_TEST_NODE, 'T')
 helpers = Helpers()
 testwallet = helpers.prepareTestcase(100000000)
 
-seed = str(base58.b58encode(os.urandom(32)))
+seed = pw.b58encode(os.urandom(32))
 print(f"Using seed: {seed}")
 leasingAddress = address.Address(seed=seed)
 

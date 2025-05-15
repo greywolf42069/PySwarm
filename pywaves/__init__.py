@@ -30,6 +30,8 @@ MAX_WDF_REQUEST = 100
 THROW_EXCEPTION_ON_ERROR = False
 
 import requests
+import base58
+import pywaves.crypto as crypto
 
 from .address import *
 from .asset import *
@@ -193,7 +195,7 @@ def markets(self):
     # return self.wrapper('/api/markets', host=DATAFEED)
 
 def validateAddress(address):
-    addr = crypto.bytes2str(base58.b58decode(address))
+    addr = crypto.bytes2str(b58decode(address))
     if addr[0] != chr(ADDRESS_VERSION):
         logging.error("Wrong address version")
     elif addr[1] != CHAIN_ID:
@@ -205,3 +207,9 @@ def validateAddress(address):
     else:
         return True
     return False
+def b58encode(data):
+    return base58.b58encode(data).decode('utf-8')
+
+def b58decode(data):
+    return base58.b58decode(data)
+
