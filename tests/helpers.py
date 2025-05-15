@@ -25,7 +25,7 @@ class Helpers:
        
         print(f"----- Sending waves to testwallet -----")
         tx = faucet.sendWaves(testwallet, amount)
-        self.waitFor(tx['id'])
+        pw.waitFor(tx['id'])
         
         # check it faucet has test asset
         assets = faucet.assets()
@@ -37,7 +37,7 @@ class Helpers:
             # sponsor asset           
             assets = faucet.assets()        
             tx = faucet.sponsorAsset(assetId=assets[0], minimalFeeInAssets = 1000000)
-            self.waitFor(tx['id'])
+            pw.waitFor(tx['id'])
         else:
             testtoken = asset.Asset(assets[0])
             
@@ -46,7 +46,7 @@ class Helpers:
         if (sendTokens):
             print(f"----- Sending assets to testwallet -----")
             tx = faucet.sendAsset(testwallet, testtoken, 100000000)
-            self.waitFor(tx['id'])
+            pw.waitFor(tx['id'])
         
         return testwallet
 
@@ -70,7 +70,7 @@ class Helpers:
             print(f"Sending...")
             tx = testwallet.sendWaves(faucet, amount, txFee=txFee)
             print(tx)
-            self.waitFor(tx['id'])
+            pw.waitFor(tx['id'])
 
 
     
