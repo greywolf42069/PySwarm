@@ -45,7 +45,7 @@ try:
 
     def test_successfulIssueAsset():
         tx = testwallet.issueAsset(NAME, f"Test Token {NAME}", 100, 8, reissuable=True)
-        helpers.waitFor(tx['id'])
+        pw.waitFor(tx['id'])
         token = asset.Asset(tx['id'])
         
         assert token.status() == 'Issued'

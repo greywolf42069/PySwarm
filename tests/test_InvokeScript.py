@@ -21,7 +21,7 @@ dappaddress1 = address.Address(seed=seed)
 
 # fund dappaddress1
 tx = testwallet.sendWaves(dappaddress1, 1000000)
-helpers.waitFor(tx['id'])
+pw.waitFor(tx['id'])
 
 assets = testwallet.assets()
 myToken = assets[0]
@@ -52,10 +52,10 @@ try:
         }'''
         
         tx = dappaddress1.setScript(script, txFee=500000)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         tx = testwallet.invokeScript(dappaddress1.address, None)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 
@@ -91,7 +91,7 @@ try:
             '}'
 
         tx = dappaddress1.setScript(script, txFee=500000)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']    
 
@@ -100,7 +100,7 @@ try:
         parameters = [ { "type": "string", "value": "test" }, {"type": "integer", "value": 100, } ]
 
         tx = testwallet.invokeScript(dappaddress1.address, 'storeValue', parameters, [])
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 
@@ -109,7 +109,7 @@ try:
                     {"type": "boolean", "value": True}]
 
         tx = testwallet.invokeScript(dappaddress1.address, 'storeBooleanValue', parameters, [])
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 
@@ -118,7 +118,7 @@ try:
                     {"type": "boolean", "value": False}]
 
         tx = testwallet.invokeScript(dappaddress1.address, 'storeBooleanValue', parameters, [])
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 
@@ -132,7 +132,7 @@ try:
         ]
 
         tx = testwallet.invokeScript(dappaddress1.address, 'storeListValue', parameters, [ ])
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 
@@ -142,7 +142,7 @@ try:
                     {"type": "boolean", "value": True}]
 
         tx = testwallet.invokeScript(dappaddress1.address, 'storeBooleanValue', parameters, [{'amount': 10, 'assetId': myToken}])
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 
@@ -155,7 +155,7 @@ try:
         ]
 
         tx = testwallet.invokeScript(dappaddress1.address, 'storeListValue', parameters, [])
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 
@@ -164,7 +164,7 @@ try:
                     {"type": "boolean", "value": True}]
 
         tx = testwallet.invokeScript(dappaddress1.address, 'storeBooleanValue', parameters, [{'amount': 10, 'assetId': '' }] )
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
         assert blockchainTx['id'] == tx['id']
 
     def test_invokeScriptWithFeeAsset():
@@ -173,7 +173,7 @@ try:
 
         tx = testwallet.invokeScript(dappaddress1.address, 'storeBooleanValue', parameters, [{'amount': 10, 'assetId': myToken}], txFee=5000000, feeAsset=myToken )
         print(tx)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
         assert blockchainTx['id'] == tx['id']
 
     def test_invokeButPywavesOffline():

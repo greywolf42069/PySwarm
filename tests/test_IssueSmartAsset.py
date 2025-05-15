@@ -54,7 +54,7 @@ try:
                 'case _ => true\n' + \
                 '}'
         tx = testwallet.issueSmartAsset(assetName, 'This is just a test smart asset', 100, scriptSource=script, decimals=8, reissuable=True)
-        helpers.waitFor(tx['id'])
+        pw.waitFor(tx['id'])
         print(tx)
         token = asset.Asset(tx['id'])
         

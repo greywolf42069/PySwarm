@@ -48,7 +48,7 @@ try:
         }]
 
         tx = testwallet.dataTransaction(data)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         testwallet.deleteDataEntry(data[0]['key'])
         assert blockchainTx['id'] == tx['id']
@@ -61,7 +61,7 @@ try:
         }]
 
         tx = testwallet.dataTransaction(data)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
         testwallet.deleteDataEntry(data[0]['key'])
         assert blockchainTx['id'] == tx['id']
 
@@ -72,7 +72,7 @@ try:
             'value': True
         }]
         tx = testwallet.dataTransaction(data)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         testwallet.deleteDataEntry(data[0]['key'])
         assert blockchainTx['id'] == tx['id']
@@ -85,7 +85,7 @@ try:
         }]
 
         tx = testwallet.dataTransaction(data)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         testwallet.deleteDataEntry(data[0]['key'])
         assert blockchainTx['id'] == tx['id']

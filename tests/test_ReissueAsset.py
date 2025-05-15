@@ -21,7 +21,7 @@ myToken = asset.Asset(assets[0])
 
 def test_succesfullReissueAsset():
     tx = faucet.reissueAsset(myToken, 10, reissuable=True)
-    blockchaintx = helpers.waitFor(tx['id'])
+    blockchaintx = pw.waitFor(tx['id'])
 
     assert blockchaintx['id'] == tx['id']
 

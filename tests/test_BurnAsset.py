@@ -19,7 +19,7 @@ try:
         tokens = testwallet.assets()
         myToken = asset.Asset(tokens[0])
         tx = testwallet.burnAsset(myToken, 1)
-        blockchaintx = helpers.waitFor(tx['id'])
+        blockchaintx = pw.waitFor(tx['id'])
         
         assert blockchaintx['id'] == tx['id']
         

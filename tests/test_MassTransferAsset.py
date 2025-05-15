@@ -33,7 +33,7 @@ script = 'match tx { \n' + \
                 'case _ => true\n' + \
                 '}'
 tx = testwallet.issueAsset(smartAssetName, f"Test Token {smartAssetName}", 100, 8, reissuable=True)
-helpers.waitFor(tx['id'])
+pw.waitFor(tx['id'])
 mySmartAsset = asset.Asset(tx['id'])
 
 try:
@@ -244,7 +244,7 @@ try:
             {'recipient': recipient2.address, 'amount': 10}
         ]
         tx = testwallet.massTransferAssets(transfers, myToken)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 
@@ -254,7 +254,7 @@ try:
             {'recipient': recipient2.address, 'amount': 10}
         ]
         tx = testwallet.massTransferAssets(transfers, myToken)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 

@@ -34,7 +34,7 @@ try:
         assetWithoutScriptName = ''.join(random.choices(string.ascii_lowercase, k=8))
         tx = testwallet.issueAsset(assetWithoutScriptName, 'This is just a Test asset', 10000000)
         assetWithoutScript = asset.Asset(tx['id'])
-        helpers.waitFor(tx['id'])
+        pw.waitFor(tx['id'])
 
         script = 'match tx { \n' + \
                 '  case _ => true\n' + \
@@ -52,11 +52,11 @@ try:
         assetWithScriptName = ''.join(random.choices(string.ascii_lowercase, k=8))
         tx = testwallet.issueSmartAsset(assetWithScriptName, 'This is just a test smart asset', 10000000, scriptSource = script)
 
-        helpers.waitFor(tx['id'])
+        pw.waitFor(tx['id'])
         assetWithScript = asset.Asset(tx['id'])
         
         tx = testwallet.setAssetScript(assetWithScript, script)        
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 

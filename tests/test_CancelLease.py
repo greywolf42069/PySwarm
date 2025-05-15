@@ -34,9 +34,9 @@ try:
         
     def test_succesfullCancelLeasing():
         leaseTransaction = testwallet.lease(leasingAddress, 900000)
-        helpers.waitFor(leaseTransaction['id'])        
+        pw.waitFor(leaseTransaction['id'])        
         tx = testwallet.leaseCancel(leaseTransaction['id'])
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
     

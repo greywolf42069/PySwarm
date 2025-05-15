@@ -55,20 +55,20 @@ try:
   
     def test_successfulTransactionWithSponsoredFee():
         tx = testwallet.sendAsset(address.Address('3MuqNWyf4RMWz3cqDi4QZRVr9v76LKMjNVZ'), myToken, 5, feeAsset = myToken, txFee=1)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 
     def test_succesfullAssetTransaction():
         tx = testwallet.sendAsset(address.Address('3MuqNWyf4RMWz3cqDi4QZRVr9v76LKMjNVZ'), myToken, 5)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
         print(blockchainTx)
         assert blockchainTx['id'] == tx['id']
 
     def test_succesfullAssetTransactionWithAttachment():
         attachment = 'This is just a test...'
         tx = testwallet.sendAsset(address.Address('3MuqNWyf4RMWz3cqDi4QZRVr9v76LKMjNVZ'), myToken, 5, attachment = attachment)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 

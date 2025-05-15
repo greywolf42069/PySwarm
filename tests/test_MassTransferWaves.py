@@ -45,7 +45,7 @@ try:
         ]
 
         tx = testwallet.massTransferWaves(transfers)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 

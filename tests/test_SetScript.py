@@ -70,7 +70,7 @@ try:
                 '}'
 
         tx = testwallet.setScript(script, txFee=500000)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 

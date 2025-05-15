@@ -36,14 +36,14 @@ try:
 
     def test_successfulTransfer():
         tx = testwallet.sendWaves(address.Address('3MuqNWyf4RMWz3cqDi4QZRVr9v76LKMjNVZ'), 1*10*4, txFee=500000)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 
     def test_successfulTransferWithAttachment():
         attachment = 'this is just a test'
         tx = testwallet.sendWaves(address.Address('3MuqNWyf4RMWz3cqDi4QZRVr9v76LKMjNVZ'), 1*10*4, attachment=attachment)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 

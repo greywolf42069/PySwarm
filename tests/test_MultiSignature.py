@@ -49,10 +49,10 @@ try:
         # fund multisig address
 
         tx = testwallet.sendWaves(multisigAddress, 100000000)
-        helpers.waitFor(tx['id'])
+        pw.waitFor(tx['id'])
         
         tx = multisigAddress.setScript(script, txFee=500000)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
         
@@ -69,7 +69,7 @@ try:
 
         tx = multisigAddress.broadcastTx(tx)
         print(tx)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 
@@ -88,7 +88,7 @@ try:
         signer.signTx(tx, secondAddress.privateKey)
 
         res = firstAddress.broadcastTx(tx)
-        blockchainTx = helpers.waitFor(res['id'])
+        blockchainTx = pw.waitFor(res['id'])
 
         assert blockchainTx['id'] == res['id']
 '''

@@ -32,6 +32,8 @@ THROW_EXCEPTION_ON_ERROR = False
 import requests
 import base58
 import pywaves.crypto as crypto
+import time
+import logging
 
 from .address import *
 from .asset import *
@@ -62,12 +64,14 @@ MATCHER_PUBLICKEY = '9cpfKN9suPNvfeUNphzxXMjcnn974eme8ZhWUjaktzU5'
 #DATAFEED = 'http://marketdata.wavesplatform.com'
 DATAFEED = 'https://api.wavesplatform.com'
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler()]
+)
+
+logging.getLogger("pywaves").setLevel(logging.INFO)
 logging.getLogger("requests").setLevel(logging.WARNING)
-console = logging.StreamHandler()
-console.setLevel(logging.ERROR)
-formatter = logging.Formatter('[%(levelname)s] %(message)s')
-console.setFormatter(formatter)
-logging.getLogger('').addHandler(console)
 
 
 class PyWavesException(ValueError):
@@ -213,3 +217,63 @@ def b58encode(data):
 def b58decode(data):
     return base58.b58decode(data)
 
+def waitFor(id, timeout=30, hard_timeout=False):
+    n = 0
+    n_utx = 0
+    first = True
+        
+    while True:
+
+        if first:
+            first = False
+        else:
+            time.sleep(1)
+            n += 1
+            n_diff = n - n_utx
+
+        try:
+            tx_data = tx(id)
+        except:
+            tx_data = None
+        
+        if tx_data and 'error' not in tx_data:
+            if tx_data['applicationStatus'] == 'succeeded':
+                logging.info(f"Transaction {id} confirmed")
+            else:
+                logging.error(f"Transaction {id} failed with status: {tx_data['applicationStatus']}")
+            return tx_data
+
+        if hard_timeout and n >= timeout:
+            logging.warning(f"Transaction {id} hard timeout reached")
+            raise TimeoutError(f"Transaction {id} hard timeout reached")
+
+        if n_utx:
+            n_diff = n - n_utx
+            if n_diff > timeout:
+                try:
+                    unconfirmed = wrapper('/transactions/unconfirmed/info/' + id)
+                except:
+                    unconfirmed = None
+
+                if unconfirmed and 'error' not in unconfirmed:
+                    logging.warning(f"Transaction {id} found in unconfirmed again ({n})")
+                    n_utx = 0
+                    continue
+
+                logging.error(f"Transaction {id} not found (timeout reached)")
+                raise TimeoutError(f"Transaction {id} not found (timeout reached)")
+
+            if n_diff >= 1:
+                logging.info(f"Transaction {id} still unconfirmed ({n}) (timeout {n_diff}/{timeout})")
+
+        else:
+            try:
+                unconfirmed = wrapper('/transactions/unconfirmed/info/' + id)
+            except:
+                unconfirmed = None
+
+            if unconfirmed and 'error' not in unconfirmed:
+                logging.info(f"Transaction {id} unconfirmed" + (f" ({n})" if n > 0 else ""))
+                continue
+
+            n_utx = n

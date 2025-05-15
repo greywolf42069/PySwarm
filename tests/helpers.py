@@ -10,24 +10,6 @@ PYWAVES_TEST_SECRET = os.getenv('PYWAVES_TEST_SECRET')
 
 class Helpers:
 
-    def waitFor(self, id, timeout=30):
-        pw.setNode(PYWAVES_TEST_NODE, 'T')
-        response = requests.get(pw.NODE + '/transactions/info/' + id).json()
-        if 'error' in response:
-            if timeout <= 0:
-                raise TimeoutError(f"Transaction {id} not confirmed after timeout")
-            print(f"Tx: {id}")
-            print(response)
-
-            if  (response['error'] == 311) :
-                print('Waiting 5 sec...')
-                time.sleep(5)
-                return self.waitFor(id, timeout - 1)
-            else:
-                raise Exception(f"Transaction {id} failed")
-        else:
-            return response
-
     def prepareTestcase(self, amount=1000000, sendTokens=False):
         pw.setNode(PYWAVES_TEST_NODE, 'T')
         faucet = address.Address(privateKey=PYWAVES_TEST_SECRET)

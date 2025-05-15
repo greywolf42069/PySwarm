@@ -29,7 +29,7 @@ try:
 
     def test_succesfullAlias():
         tx = testwallet.createAlias(alias)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
     

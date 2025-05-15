@@ -19,7 +19,7 @@ address1 = address.Address(seed=seed)
 
 assetName = ''.join(random.choices(string.ascii_lowercase, k=8))
 token = testwallet.issueAsset(assetName, f"Test Token {assetName}", 100*(10**8), 8, reissuable=True)
-helpers.waitFor(token['id'])
+pw.waitFor(token['id'])
     
 try:
 
@@ -33,7 +33,7 @@ try:
     def test_succesfullSponsoringAsset():
         
         tx = testwallet.sponsorAsset(token['id'], minimalFeeInAssets = 1  )
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 

@@ -39,12 +39,12 @@ try:
 
     def test_succesfullLeasing():
         tx = testwallet.lease(leasingAddress, 100000)
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
 
         assert blockchainTx['id'] == tx['id']
 
         testwallet.leaseCancel(tx['id'])
-        blockchainTx = helpers.waitFor(tx['id'])
+        blockchainTx = pw.waitFor(tx['id'])
         
     def test_closeTestcase():
         print("----- Closing testcase -----")

@@ -32,7 +32,7 @@ try:
         }'''
 
         tx = testwallet.setScript(script, txFee=500000)
-        helpers.waitFor(tx['id'])
+        pw.waitFor(tx['id'])
 
         result = testwallet.script()
         print(result)
