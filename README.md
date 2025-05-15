@@ -11,7 +11,7 @@ pip install pywaves-ce
 
 ```python
 import pywaves as pw           # import path unchanged
-print(pw.__version__)          # "1.0.5"
+print(pw.__version__)          # "2.0.x"
 ```
 
 > **Notice:**
