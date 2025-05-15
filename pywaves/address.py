@@ -1,3 +1,4 @@
+import math
 import pywaves_curve25519 as curve
 import os
 import logging
