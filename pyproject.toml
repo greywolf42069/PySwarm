@@ -15,7 +15,7 @@ classifiers = [
 python = "^3.8"
 requests = "*"
 pywaves-curve25519 = "*"
-pywaves-protobuf = "1.5.2"
+pywaves-protobuf = "1.5.2.post1"
 base58 = "0.2.5"
 
 [tool.poetry.group.dev.dependencies]
