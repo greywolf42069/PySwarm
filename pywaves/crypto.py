@@ -39,7 +39,7 @@ Masks = [(1 << i) - 1 for i in range(65)]
 
 
 def bits2bytes(x):
-    return (int(x) + 7) / 8
+    return (int(x) + 7) // 8
 
 
 def rol(value, left, bits):
@@ -192,18 +192,21 @@ class KeccakSponge(object):
         self.padfn = padfn
         self.permfn = permfn
         self.buffer = []
+        self.state.bitrate_bytes = int(self.state.bitrate_bytes)
 
     def copy(self):
         return deepcopy(self)
 
     def absorb_block(self, bb):
-        self.state.bitrate_bytes = int(self.state.bitrate_bytes)
         assert len(bb) == self.state.bitrate_bytes
         self.state.absorb(bb)
         self.permfn(self.state)
 
     def absorb(self, s):
-        self.buffer = str2list(s)
+        if isinstance(s, bytes):
+            self.buffer = list(s)
+        else:
+            self.buffer = str2list(s)
 
         while len(self.buffer) >= self.state.bitrate_bytes:
             self.absorb_block(self.buffer[:self.state.bitrate_bytes])
