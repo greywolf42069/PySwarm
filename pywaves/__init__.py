@@ -15,7 +15,7 @@ DEFAULT_TX_FEE = 100000
 DEFAULT_BASE_FEE = DEFAULT_TX_FEE
 DEFAULT_SMART_FEE = 400000
 DEFAULT_ASSET_FEE = 100000000
-DEFAULT_MATCHER_FEE = 300000
+DEFAULT_MATCHER_FEE = 1000000
 DEFAULT_LEASE_FEE = 100000
 DEFAULT_ALIAS_FEE = 100000
 DEFAULT_SPONSOR_FEE = 100000000
@@ -30,6 +30,10 @@ MAX_WDF_REQUEST = 100
 THROW_EXCEPTION_ON_ERROR = False
 
 import requests
+import base58
+import pywaves.crypto as crypto
+import time
+import logging
 
 from .address import *
 from .asset import *
@@ -60,12 +64,14 @@ MATCHER_PUBLICKEY = '9cpfKN9suPNvfeUNphzxXMjcnn974eme8ZhWUjaktzU5'
 #DATAFEED = 'http://marketdata.wavesplatform.com'
 DATAFEED = 'https://api.wavesplatform.com'
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler()]
+)
+
+logging.getLogger("pywaves").setLevel(logging.INFO)
 logging.getLogger("requests").setLevel(logging.WARNING)
-console = logging.StreamHandler()
-console.setLevel(logging.ERROR)
-formatter = logging.Formatter('[%(levelname)s] %(message)s')
-console.setFormatter(formatter)
-logging.getLogger('').addHandler(console)
 
 
 class PyWavesException(ValueError):
@@ -146,9 +152,13 @@ def wrapper(api, postData='', host='', headers=''):
     if not host:
         host = NODE
     if postData:
-        req = requests.post('%s%s' % (host, api), data=postData, headers={'content-type': 'application/json'}).json()
+        url = '%s%s' % (host, api)
+        #print(f"Making POST request to: {url}")
+        req = requests.post(url, data=postData, headers={'content-type': 'application/json'}).json()
     else:
-        req = requests.get('%s%s' % (host, api), headers=headers).json()
+        url = '%s%s' % (host, api)
+        #print(f"Making GET request to: {url}")
+        req = requests.get(url, headers=headers).json()
     return req
 
 def height():
@@ -189,7 +199,7 @@ def markets(self):
     # return self.wrapper('/api/markets', host=DATAFEED)
 
 def validateAddress(address):
-    addr = crypto.bytes2str(base58.b58decode(address))
+    addr = crypto.bytes2str(b58decode(address))
     if addr[0] != chr(ADDRESS_VERSION):
         logging.error("Wrong address version")
     elif addr[1] != CHAIN_ID:
@@ -201,9 +211,69 @@ def validateAddress(address):
     else:
         return True
     return False
+def b58encode(data):
+    return base58.b58encode(data).decode('utf-8')
 
-WAVES = Asset('')
-BTC = Asset('8LQW8f7P5d5PZM7GtZEBgaqRPGSzS3DfPuiXrURJ4AJS')
-USD = Asset('Ft8X1v1LTa1ABafufpaCWyVj8KkaxUWE6xBhW6sNFJck')
+def b58decode(data):
+    return base58.b58decode(data)
 
+def waitFor(id, timeout=30, hard_timeout=False):
+    n = 0
+    n_utx = 0
+    first = True
+        
+    while True:
 
+        if first:
+            first = False
+        else:
+            time.sleep(1)
+            n += 1
+            n_diff = n - n_utx
+
+        try:
+            tx_data = tx(id)
+        except:
+            tx_data = None
+        
+        if tx_data and 'error' not in tx_data:
+            if tx_data['applicationStatus'] == 'succeeded':
+                logging.info(f"Transaction {id} confirmed")
+            else:
+                logging.error(f"Transaction {id} failed with status: {tx_data['applicationStatus']}")
+            return tx_data
+
+        if hard_timeout and n >= timeout:
+            logging.warning(f"Transaction {id} hard timeout reached")
+            raise TimeoutError(f"Transaction {id} hard timeout reached")
+
+        if n_utx:
+            n_diff = n - n_utx
+            if n_diff > timeout:
+                try:
+                    unconfirmed = wrapper('/transactions/unconfirmed/info/' + id)
+                except:
+                    unconfirmed = None
+
+                if unconfirmed and 'error' not in unconfirmed:
+                    logging.warning(f"Transaction {id} found in unconfirmed again ({n})")
+                    n_utx = 0
+                    continue
+
+                logging.error(f"Transaction {id} not found (timeout reached)")
+                raise TimeoutError(f"Transaction {id} not found (timeout reached)")
+
+            if n_diff >= 1:
+                logging.info(f"Transaction {id} still unconfirmed ({n}) (timeout {n_diff}/{timeout})")
+
+        else:
+            try:
+                unconfirmed = wrapper('/transactions/unconfirmed/info/' + id)
+            except:
+                unconfirmed = None
+
+            if unconfirmed and 'error' not in unconfirmed:
+                logging.info(f"Transaction {id} unconfirmed" + (f" ({n})" if n > 0 else ""))
+                continue
+
+            n_utx = n

@@ -3,3 +3,7 @@ venv*/
 .python-version
 *.egg-info/
 poetry.lock
+transferbacktofaucet.py
+unlease.py
+private/
+/.vscode

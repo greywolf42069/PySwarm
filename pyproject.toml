@@ -7,19 +7,25 @@ readme = "README.md"
 packages = [{include = "pywaves"}]
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.8"
-requests = "*"
-pywaves-curve25519 = "*"
-base58 = "0.2.5"
-protobuf = "3.19.6"
+python = "^3.8"
+requests = "^2.32.3"
+pywaves-curve25519 = "^1.0.3"
+pywaves-protobuf = "^1.5.2"
+base58 = "^2.1.1"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "*"
+pytest = "^8.3.5"
 
 [build-system]
 requires = ["poetry-core"]

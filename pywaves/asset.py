@@ -1,8 +1,8 @@
-import pywaves
+import pywaves as pw
 import logging
 
 class Asset(object):
-    def __init__(self, assetId, pywaves=pywaves):
+    def __init__(self, assetId, pywaves=pw):
         self.pywaves = pywaves
         self.assetId='' if assetId == pywaves.DEFAULT_CURRENCY else assetId
         self.issuer = self.name = self.description = ''
@@ -32,7 +32,7 @@ class Asset(object):
     __repr__ = __str__
 
     def status(self):
-        if self.assetId!=pywaves.DEFAULT_CURRENCY:
+        if self.assetId!=pw.DEFAULT_CURRENCY:
             try:
                 req = self.pywaves.wrapper('/assets/details/%s' % self.assetId)
                 if req['assetId'] != None:
@@ -56,7 +56,7 @@ class Asset(object):
             return False
 
 class AssetPair(object):
-    def __init__(self, asset1, asset2, pywaves=pywaves):
+    def __init__(self, asset1, asset2, pywaves=pw):
         self.pywaves = pywaves
         self.asset1 = asset1
         self.asset2 = asset2
@@ -88,8 +88,8 @@ class AssetPair(object):
             return self.asset1
 
     def orderbook(self):
-        req = self.pywaves.wrapper('/matcher/orderbook/%s/%s' % (self.a1, self.a2), host=self.pywaves.MATCHER)
-        return req
+        res = self.pywaves.wrapper('/matcher/orderbook/%s/%s' % (self.a1, self.a2), host=self.pywaves.MATCHER)
+        return res
 
     def ticker(self):
         return self.pywaves.wrapper('/v0/pairs/%s/%s' % (self.a1, self.a2), host=self.pywaves.DATAFEED)
@@ -128,11 +128,11 @@ class AssetPair(object):
         amountAssetId = ''
         priceAssetId = ''
         if self.asset1.assetId == '':
-            amountAssetId = pywaves.DEFAULT_CURRENCY
+            amountAssetId = pw.DEFAULT_CURRENCY
         else:
             amountAssetId = self.asset1.assetId
         if self.asset2.assetId == '':
-            priceAssetId = pywaves.DEFAULT_CURRENCY
+            priceAssetId = pw.DEFAULT_CURRENCY
         else:
             priceAssetId = self.asset2.assetId
 

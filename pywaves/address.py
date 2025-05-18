@@ -2,8 +2,11 @@ import math
 import pywaves_curve25519 as curve
 import os
 import logging
-from .txSigner import *
-from .txGenerator import *
+import pywaves as pw
+import pywaves.crypto as crypto
+import time
+import struct
+import json
 
 wordList = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'absorb', 'abstract', 'absurd', 'abuse', 'access',
             'accident', 'account', 'accuse', 'achieve', 'acid', 'acoustic', 'acquire', 'across', 'act', 'action',
@@ -192,10 +195,10 @@ wordList = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'absorb', 
             'zoo']
 
 class Address(object):
-    def __init__(self, address='', publicKey='', privateKey='', seed='', alias='', nonce=0, pywaves=pywaves):
+    def __init__(self, address='', publicKey='', privateKey='', seed='', alias='', nonce=0, pywaves=pw):
         self.pywaves = pywaves
-        self.txSigner = TxSigner(pywaves)
-        self.txGenerator = TxGenerator(pywaves)
+        self.txSigner = pw.TxSigner(pywaves)
+        self.txGenerator = pw.TxGenerator(pywaves)
         if nonce < 0 or nonce > 4294967295:
             raise ValueError('Nonce must be between 0 and 4294967295')
         if seed:
@@ -290,7 +293,7 @@ class Address(object):
                 words.append(wordList[w3])
             self.seed = ' '.join(words)
         if publicKey:
-            pubKey = base58.b58decode(publicKey)
+            pubKey = pw.b58decode(publicKey)
             privKey = ""
         else:
             seedHash = crypto.hashChain(struct.pack(">L", nonce) + crypto.str2bytes(self.seed))
@@ -299,7 +302,7 @@ class Address(object):
                 privKey = curve.generatePrivateKey(accountSeedHash)
             else:
                 # clamping: https://neilmadden.blog/2020/05/28/whats-the-curve25519-clamping-all-about/
-                privKey = base58.b58decode(privateKey)
+                privKey = pw.b58decode(privateKey)
                 privKeyArray = bytearray(privKey)
                 privKeyArray[0] &= 248;
                 privKeyArray[31] &= 127;
@@ -308,12 +311,12 @@ class Address(object):
             pubKey = curve.generatePublicKey(privKey)
         unhashedAddress = chr(1) + str(self.pywaves.CHAIN_ID) + crypto.hashChain(pubKey)[0:20]
         addressHash = crypto.hashChain(crypto.str2bytes(unhashedAddress))[0:4]
-        self.address = base58.b58encode(crypto.str2bytes(unhashedAddress + addressHash))
-        self.publicKey = base58.b58encode(pubKey)
+        self.address = pw.b58encode(crypto.str2bytes(unhashedAddress + addressHash))
+        self.publicKey = pw.b58encode(pubKey)
         if privKey != "":
-            self.privateKey = base58.b58encode(privKey)
+            self.privateKey = pw.b58encode(privKey)
 
-    def issueAsset(self, name, description, quantity, decimals=0, reissuable=False, txFee=pywaves.DEFAULT_ASSET_FEE, timestamp=0):
+    def issueAsset(self, name, description, quantity, decimals=0, reissuable=False, txFee=pw.DEFAULT_ASSET_FEE, timestamp=0):
         if not self.privateKey:
             msg = 'Private key required'
             logging.error(msg)
@@ -327,42 +330,30 @@ class Address(object):
                 timestamp = int(time.time() * 1000)
             tx = self.txGenerator.generateIssueAsset(name, description, quantity, self.publicKey, decimals, reissuable, txFee, timestamp)
             self.txSigner.signTx(tx, self.privateKey)
-            req = self.broadcastTx(tx)
-            if self.pywaves.OFFLINE:
-                return req
-            else:
-                return pywaves.Asset(req['assetId'], self.pywaves)
-
-    def reissueAsset(self, asset, quantity, reissuable=False, txFee=pywaves.DEFAULT_TX_FEE, timestamp=0):
+            return self.broadcastTx(tx)
+            
+    def reissueAsset(self, asset, quantity, reissuable=False, txFee=pw.DEFAULT_TX_FEE, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
         tx = self.txGenerator.generateReissueAsset(asset, quantity, self.publicKey, reissuable, txFee, timestamp)
         self.txSigner.signTx(tx, self.privateKey)
-        req = self.broadcastTx(tx)
-        if self.pywaves.OFFLINE:
-            return req
-        else:
-            return req.get('id', 'ERROR')
-
-    def burnAsset(self, asset, quantity, txFee=pywaves.DEFAULT_TX_FEE, timestamp=0):
+        return self.broadcastTx(tx)
+        
+    def burnAsset(self, asset, quantity, txFee=pw.DEFAULT_TX_FEE, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
         tx = self.txGenerator.generateBurnAsset(asset, quantity, self.publicKey, txFee, timestamp)
         self.txSigner.signTx(tx, self.privateKey)
-        req = self.broadcastTx(tx)
-        if self.pywaves.OFFLINE:
-            return req
-        else:
-            return req.get('id', 'ERROR')
-
+        return self.broadcastTx(tx)
+        
     def broadcastTx(self, tx):
         data = json.dumps(tx)
 
         return self.pywaves.wrapper('/transactions/broadcast', data)
 
-    def sendWaves(self, recipient, amount, attachment='', txFee=pywaves.DEFAULT_TX_FEE, timestamp=0):
+    def sendWaves(self, recipient, amount, attachment='', txFee=pw.DEFAULT_TX_FEE, timestamp=0):
         if not self.privateKey:
             msg = 'Private key required'
             logging.error(msg)
@@ -383,14 +374,14 @@ class Address(object):
 
             tx = self.txGenerator.generateSendWaves(recipient, amount, self.publicKey, attachment, txFee, timestamp)
             self.signTx(tx)
-            tx['attachment'] = base58.b58encode(crypto.str2bytes(attachment))
+            tx['attachment'] = pw.b58encode(crypto.str2bytes(attachment))
 
             return self.broadcastTx(tx)
 
     def signTx(self, tx):
         self.txSigner.signTx(tx, self.privateKey)
 
-    def massTransferWaves(self, transfers, attachment='', timestamp=0, baseFee=pywaves.DEFAULT_BASE_FEE):
+    def massTransferWaves(self, transfers, attachment='', timestamp=0, baseFee=pw.DEFAULT_BASE_FEE):
         txFee = baseFee + (math.ceil((len(transfers) + 1) / 2 - 0.5)) * baseFee
         txFee += self.script()['extraFee']
         totalAmount = 0
@@ -416,11 +407,11 @@ class Address(object):
 
             tx = self.txGenerator.generateMassTransferWaves(transfers, self.publicKey, attachment, timestamp, txFee)
             self.txSigner.signTx(tx, self.privateKey)
-            tx['attachment'] = base58.b58encode(crypto.str2bytes(attachment))
+            tx['attachment'] = pw.b58encode(crypto.str2bytes(attachment))
 
             return self.broadcastTx(tx)
 
-    def sendAsset(self, recipient, asset, amount, attachment='', feeAsset='', txFee=pywaves.DEFAULT_TX_FEE, timestamp=0):
+    def sendAsset(self, recipient, asset, amount, attachment='', feeAsset='', txFee=pw.DEFAULT_TX_FEE, timestamp=0):
         if len(self.privateKey) < 10:
             msg = 'Private key required'
             logging.error(msg)
@@ -458,12 +449,11 @@ class Address(object):
                 tx = self.txGenerator.generateSendAsset(recipient, asset, amount, self.publicKey, attachment, feeAsset=None, txFee=txFee, timestamp=timestamp)
 
             self.signTx(tx)
-            #tx['attachment'] = base58.b58encode(crypto.str2bytes(attachment))
 
             return self.broadcastTx(tx)
 
-    def massTransferAssets(self, transfers, asset, attachment='', timestamp=0, baseFee=pywaves.DEFAULT_BASE_FEE,
-                           smartFee=pywaves.DEFAULT_SMART_FEE):
+    def massTransferAssets(self, transfers, asset, attachment='', timestamp=0, baseFee=pw.DEFAULT_BASE_FEE,
+                           smartFee=pw.DEFAULT_SMART_FEE):
         txFee = baseFee + (math.ceil((len(transfers) + 1) / 2 - 0.5)) * baseFee
 
         if (asset.isSmart()):
@@ -488,7 +478,7 @@ class Address(object):
             logging.error(msg)
             self.pywaves.throw_error(msg)
         if not self.pywaves.OFFLINE and self.balance(assetId=asset.assetId) < totalAmount:
-            msg = 'Insufficient %s balance' % asset.name
+            msg = 'Insufficient Asset balance'
             logging.error(msg)
             self.pywaves.throw_error(msg)
         else:
@@ -497,32 +487,53 @@ class Address(object):
 
             tx = self.txGenerator.generateMassTransferAssets(transfers, asset, self.publicKey, attachment, timestamp, txFee)
             self.txSigner.signTx(tx, self.privateKey)
-            tx['attachment'] = base58.b58encode(crypto.str2bytes(attachment))
 
             return self.broadcastTx(tx)
 
-    def dataTransaction(self, data, timestamp=0, baseFee=pywaves.DEFAULT_BASE_FEE, minimalFee=500000):
-        tx = self.txGenerator.generateDatatransaction(data, self.publicKey, timestamp, baseFee, minimalFee)
-        self.txSigner.signTx(tx, self.privateKey)
+    def dataTransaction(self, data, timestamp=0, baseFee=pw.DEFAULT_BASE_FEE, minimalFee=500000):
+        if not self.privateKey:
+            msg = 'Private key required'
+            logging.error(msg)
+            self.pywaves.throw_error(msg)
+        elif not self.pywaves.OFFLINE and self.balance() < minimalFee:
+            msg = 'Insufficient Waves balance'
+            logging.error(msg)
+            self.pywaves.throw_error(msg)        
+        else:
+            tx = self.txGenerator.generateDatatransaction(data, self.publicKey, timestamp, baseFee, minimalFee)
+            self.txSigner.signTx(tx, self.privateKey)
 
-        return self.broadcastTx(tx)
+            return self.broadcastTx(tx)
 
     def deleteDataEntry(self, key, timestamp=0, minimalFee=500000):
-        tx = self.txGenerator.generateDeleteDataEntry(key, self.publicKey, timestamp, minimalFee)
-        self.txSigner.signTx(tx, self.privateKey)
+        if not self.privateKey:
+            msg = 'Private key required'
+            logging.error(msg)
+            self.pywaves.throw_error(msg)
+        elif not self.pywaves.OFFLINE and self.balance() < minimalFee:
+            msg = 'Insufficient Waves balance'
+            logging.error(msg)
+            self.pywaves.throw_error(msg)        
+        else:
+            tx = self.txGenerator.generateDeleteDataEntry(key, self.publicKey, timestamp, minimalFee)
+            self.txSigner.signTx(tx, self.privateKey)
 
-        return self.broadcastTx(tx)
+            return self.broadcastTx(tx)
 
-    def _postOrder(self, amountAsset, priceAsset, orderType, amount, price, maxLifetime=30 * 86400, matcherFee=pywaves.DEFAULT_MATCHER_FEE, timestamp=0, matcherFeeAssetId=''):
+    def _postOrder(self, amountAsset, priceAsset, orderType, amount, price, maxLifetime=30 * 86400, matcherFee=pw.DEFAULT_MATCHER_FEE, timestamp=0, matcherFeeAssetId=''):
+        if not self.privateKey:
+            msg = 'Private key required'
+            logging.error(msg)
+            self.pywaves.throw_error(msg)
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
         expiration = timestamp + maxLifetime * 1000
-        asset1 = b'\0' if amountAsset.assetId == '' else b'\1' + base58.b58decode(amountAsset.assetId)
-        asset2 = b'\0' if priceAsset.assetId == '' else b'\1' + base58.b58decode(priceAsset.assetId)
-        matcherFeeAssetIdPart = b'\0' if matcherFeeAssetId == '' else b'\1' + base58.b58decode(matcherFeeAssetId)
+        asset1 = b'\0' if amountAsset.assetId == '' else b'\1' + pw.b58decode(amountAsset.assetId)
+        asset2 = b'\0' if priceAsset.assetId == '' else b'\1' + pw.b58decode(priceAsset.assetId)
+        matcherFeeAssetIdPart = b'\0' if matcherFeeAssetId == '' else b'\1' + pw.b58decode(matcherFeeAssetId)
         sData = b'\3' + \
-                base58.b58decode(self.publicKey) + \
-                base58.b58decode(self.pywaves.MATCHER_PUBLICKEY) + \
+                pw.b58decode(self.publicKey) + \
+                pw.b58decode(self.pywaves.MATCHER_PUBLICKEY) + \
                 asset1 + \
                 asset2 + \
                 orderType + \
@@ -575,8 +586,8 @@ class Address(object):
                 msg = "Order not found"
                 logging.error(msg)
                 self.pywaves.throw_error(msg)
-        sData = base58.b58decode(self.publicKey) + \
-                base58.b58decode(order.orderId)
+        sData = pw.b58decode(self.publicKey) + \
+                pw.b58decode(order.orderId)
         signature = crypto.sign(self.privateKey, sData)
         data = json.dumps({
             "sender": self.publicKey,
@@ -597,8 +608,8 @@ class Address(object):
             return id
 
     def cancelOrderByID(self, assetPair, orderId):
-        sData = base58.b58decode(self.publicKey) + \
-                base58.b58decode(orderId)
+        sData = pw.b58decode(self.publicKey) + \
+                pw.b58decode(orderId)
         signature = crypto.sign(self.privateKey, sData)
         data = json.dumps({
             "sender": self.publicKey,
@@ -618,7 +629,7 @@ class Address(object):
                 logging.info('Order Cancelled - ID: %s' % id)
             return id
 
-    def buy(self, assetPair, amount, price, maxLifetime=30 * 86400, matcherFee=pywaves.DEFAULT_MATCHER_FEE,
+    def buy(self, assetPair, amount, price, maxLifetime=30 * 86400, matcherFee=pw.DEFAULT_MATCHER_FEE,
             timestamp=0, matcherFeeAssetId=''):
         assetPair.refresh()
         normPrice = int(round(pow(10, 8 + assetPair.asset2.decimals - assetPair.asset1.decimals) * price))
@@ -628,7 +639,7 @@ class Address(object):
         elif id != -1:
             return self.pywaves.Order(id, assetPair, self)
 
-    def sell(self, assetPair, amount, price, maxLifetime=30 * 86400, matcherFee=pywaves.DEFAULT_MATCHER_FEE,
+    def sell(self, assetPair, amount, price, maxLifetime=30 * 86400, matcherFee=pw.DEFAULT_MATCHER_FEE,
              timestamp=0, matcherFeeAssetId=''):
         assetPair.refresh()
         normPrice = int(round(pow(10, 8 + assetPair.asset2.decimals - assetPair.asset1.decimals) * price))
@@ -656,7 +667,7 @@ class Address(object):
         if not self.pywaves.OFFLINE:
             return amountBalance, priceBalance
 
-    def lease(self, recipient, amount, txFee=pywaves.DEFAULT_LEASE_FEE, timestamp=0):
+    def lease(self, recipient, amount, txFee=pw.DEFAULT_LEASE_FEE, timestamp=0):
         if not self.privateKey:
             msg = 'Private key required'
             logging.error(msg)
@@ -678,7 +689,7 @@ class Address(object):
 
             return self.broadcastTx(tx)
 
-    def leaseCancel(self, leaseId, txFee=pywaves.DEFAULT_LEASE_FEE, timestamp=0):
+    def leaseCancel(self, leaseId, txFee=pw.DEFAULT_LEASE_FEE, timestamp=0):
         if not self.privateKey:
             msg = 'Private key required'
             logging.error(msg)
@@ -693,17 +704,13 @@ class Address(object):
 
             tx = self.txGenerator.generateLeaseCancel(leaseId, self.publicKey, txFee, timestamp)
             self.txSigner.signTx(tx, self.privateKey)
-            res = self.broadcastTx(tx)
 
-            if self.pywaves.OFFLINE:
-                return res
-            elif 'leaseId' in res:
-                return res['leaseId']
+            return self.broadcastTx(tx)
 
     def getOrderHistory(self, assetPair, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
-        sData = base58.b58decode(self.publicKey) + \
+        sData = pw.b58decode(self.publicKey) + \
                 struct.pack(">Q", timestamp)
         signature = crypto.sign(self.privateKey, sData)
         data = {
@@ -711,11 +718,11 @@ class Address(object):
             "Timestamp": str(timestamp),
             "Signature": signature
         }
-        req = self.pywaves.wrapper('/matcher/orderbook/%s/%s/publicKey/%s' % (
+        res = self.pywaves.wrapper('/matcher/orderbook/%s/%s/publicKey/%s' % (
         self.pywaves.DEFAULT_CURRENCY if assetPair.asset1.assetId == '' else assetPair.asset1.assetId,
         self.pywaves.DEFAULT_CURRENCY if assetPair.asset2.assetId == '' else assetPair.asset2.assetId, self.publicKey),
                                    headers=data, host=self.pywaves.MATCHER)
-        return req
+        return res
 
     def cancelOpenOrders(self, assetPair):
         orders = self.getOrderHistory(assetPair)
@@ -723,8 +730,8 @@ class Address(object):
             status = order['status']
             orderId = order['id']
             if status == 'Accepted' or status == 'PartiallyFilled':
-                sData = base58.b58decode(self.publicKey) + \
-                        base58.b58decode(orderId)
+                sData = pw.b58decode(self.publicKey) + \
+                        pw.b58decode(orderId)
                 signature = crypto.sign(self.privateKey, sData)
                 data = json.dumps({
                     "sender": self.publicKey,
@@ -736,7 +743,7 @@ class Address(object):
                 self.pywaves.DEFAULT_CURRENCY if assetPair.asset2.assetId == '' else assetPair.asset2.assetId), data,
                                      host=self.pywaves.MATCHER)
 
-    def createAlias(self, alias, txFee=pywaves.DEFAULT_ALIAS_FEE, timestamp=0):
+    def createAlias(self, alias, txFee=pw.DEFAULT_ALIAS_FEE, timestamp=0):
         if not self.privateKey:
             msg = 'Private key required'
             logging.error(msg)
@@ -749,7 +756,7 @@ class Address(object):
             self.txSigner.signTx(tx, self.privateKey)
             return self.broadcastTx(tx)
 
-    def sponsorAsset(self, assetId, minimalFeeInAssets, txFee=pywaves.DEFAULT_SPONSOR_FEE, timestamp=0):
+    def sponsorAsset(self, assetId, minimalFeeInAssets, txFee=pw.DEFAULT_SPONSOR_FEE, timestamp=0):
         if not self.privateKey:
             msg = 'Private key required'
             logging.error(msg)
@@ -762,7 +769,7 @@ class Address(object):
             self.txSigner.signTx(tx, self.privateKey)
             return self.broadcastTx(tx)
 
-    def setCompiledScript(self, script, txFee=pywaves.DEFAULT_SCRIPT_FEE, timestamp=0, publicKey=None):
+    def setCompiledScript(self, script, txFee=pw.DEFAULT_SCRIPT_FEE, timestamp=0, publicKey=None):
         if not self.privateKey:
             msg = 'Private key required'
             logging.error(msg)
@@ -775,13 +782,13 @@ class Address(object):
             self.txSigner.signTx(tx, self.privateKey)
             return self.broadcastTx(tx)
 
-    def setScript(self, scriptSource, txFee=pywaves.DEFAULT_SCRIPT_FEE, timestamp=0, publicKey=None):
+    def setScript(self, scriptSource, txFee=pw.DEFAULT_SCRIPT_FEE, timestamp=0, publicKey=None):
         script = self.pywaves.wrapper('/utils/script/compileCode', scriptSource)['script'][7:]
-
+        
         return self.setCompiledScript(script, txFee, timestamp, publicKey)
 
-    def setAssetScript(self, asset, scriptSource, txFee=pywaves.DEFAULT_ASSET_SCRIPT_FEE, timestamp=0):
-        script = self.pywaves.wrapper('/utils/script/compile', scriptSource)['script'][7:]
+    def setAssetScript(self, asset, scriptSource, txFee=pw.DEFAULT_ASSET_SCRIPT_FEE, timestamp=0):
+        script = self.pywaves.wrapper('/utils/script/compileCode', scriptSource)['script'][7:]
         if not self.privateKey:
             msg = 'Private key required'
             logging.error(msg)
@@ -794,10 +801,9 @@ class Address(object):
 
             tx = self.txGenerator.generateSetAssetScript(asset, scriptSource, self.publicKey, txFee, timestamp)
             self.txSigner.signTx(tx, self.privateKey)
-            print(tx)
             return self.broadcastTx(tx)
 
-    def issueSmartAsset(self, name, description, quantity, scriptSource, decimals=0, reissuable=False, txFee=pywaves.DEFAULT_ASSET_FEE, timestamp=0):
+    def issueSmartAsset(self, name, description, quantity, scriptSource, decimals=0, reissuable=False, txFee=pw.DEFAULT_ASSET_FEE, timestamp=0):
         if self.pywaves.OFFLINE:
             msg = 'PyWaves currently offline'
             logging.error(msg)
@@ -819,10 +825,9 @@ class Address(object):
 
             tx = self.txGenerator.generateIssueSmartAsset(name, description, quantity, scriptSource, self.publicKey, decimals, reissuable, txFee, timestamp)
             self.txSigner.signTx(tx, self.privateKey)
-
             return self.broadcastTx(tx)
 
-    def invokeScript(self, dappAddress, functionName, params = [], payments = [], feeAsset=None, txFee=pywaves.DEFAULT_INVOKE_SCRIPT_FEE, publicKey=None, timestamp=0):
+    def invokeScript(self, dappAddress, functionName, params = [], payments = [], feeAsset=None, txFee=pw.DEFAULT_INVOKE_SCRIPT_FEE, publicKey=None, timestamp=0):
         if not self.privateKey:
             msg = 'Private key required'
             logging.error(msg)
@@ -836,16 +841,14 @@ class Address(object):
 
             tx = self.txGenerator.generateInvokeScript(dappAddress, functionName, publicKey, params, payments, feeAsset, txFee, timestamp)
             self.txSigner.signTx(tx, self.privateKey)
-            req = self.broadcastTx(tx)
-            if self.pywaves.OFFLINE:
-                return req
-            else:
-                return req
-
+            
+            return self.broadcastTx(tx)
+            
     def updateAssetInfo(self, assetId, name, description, timestamp=0):
         if timestamp == 0:
             timestamp = int(time.time() * 1000)
 
         tx = self.txGenerator.generateUpdateAssetInfo(assetId, name, description, self.publicKey, timestamp)
         self.txSigner.signTx(tx, self.privateKey)
+        
         return self.broadcastTx(tx)

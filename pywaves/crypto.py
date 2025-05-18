@@ -1,6 +1,6 @@
 import hashlib
 import pywaves_curve25519 as curve
-import base58
+import pywaves as pw
 import os
 from math import log
 from operator import xor
@@ -39,7 +39,7 @@ Masks = [(1 << i) - 1 for i in range(65)]
 
 
 def bits2bytes(x):
-    return (int(x) + 7) / 8
+    return (int(x) + 7) // 8
 
 
 def rol(value, left, bits):
@@ -119,7 +119,7 @@ class KeccakState(object):
 
         for y in KeccakState.rangeH:
             row = []
-            for x in rangeW:
+            for x in KeccakState.rangeW:
                 row.append(fmt(st[x][y]))
             rows.append(' '.join(row))
         return '\n'.join(rows)
@@ -192,18 +192,21 @@ class KeccakSponge(object):
         self.padfn = padfn
         self.permfn = permfn
         self.buffer = []
+        self.state.bitrate_bytes = int(self.state.bitrate_bytes)
 
     def copy(self):
         return deepcopy(self)
 
     def absorb_block(self, bb):
-        self.state.bitrate_bytes = int(self.state.bitrate_bytes)
         assert len(bb) == self.state.bitrate_bytes
         self.state.absorb(bb)
         self.permfn(self.state)
 
     def absorb(self, s):
-        self.buffer = str2list(s)
+        if isinstance(s, bytes):
+            self.buffer = list(s)
+        else:
+            self.buffer = str2list(s)
 
         while len(self.buffer) >= self.state.bitrate_bytes:
             self.absorb_block(self.buffer[:self.state.bitrate_bytes])
@@ -264,11 +267,11 @@ def hashChain(s):
 def sign(privateKey, message):
     random64 = os.urandom(64)
 
-    return base58.b58encode(curve.calculateSignature(random64, base58.b58decode(privateKey), message))
+    return pw.b58encode(curve.calculateSignature(random64, pw.b58decode(privateKey), message))
 
 def id(message):
-    return base58.b58encode(hashlib.sha256(message).digest())
+    return pw.b58encode(hashlib.sha256(message).digest())
 
 def verify_signature(pub_key, message, signature):
     """ all of the arguments are expected in a string format """
-    return curve.verifySignature(base58.b58decode(pub_key), message.encode(), base58.b58decode(signature)) == 0
+    return curve.verifySignature(pw.b58decode(pub_key), message.encode(), pw.b58decode(signature)) == 0
