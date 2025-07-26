@@ -46,23 +46,21 @@ from .txGenerator import *
 from .txSigner import *
 
 OFFLINE = False
-NODE = 'https://nodes.wavesnodes.com'
+NODE = 'https://nodes.swrmdao.com'
 
 ADDRESS_VERSION = 1
 ADDRESS_CHECKSUM_LENGTH = 4
 ADDRESS_HASH_LENGTH = 20
 ADDRESS_LENGTH = 1 + 1 + ADDRESS_CHECKSUM_LENGTH + ADDRESS_HASH_LENGTH
 
-CHAIN = 'mainnet'
-CHAIN_ID = 'W'
-#MATCHER = 'https://nodes.wavesnodes.com'
-#MATCHER = 'http://matcher.wavesnodes.com'
-MATCHER = 'https://matcher.waves.exchange'
-#MATCHER_PUBLICKEY = ''
-MATCHER_PUBLICKEY = '9cpfKN9suPNvfeUNphzxXMjcnn974eme8ZhWUjaktzU5'
+CHAIN = 'swarm'
+CHAIN_ID = '0'
+# Swarm blockchain configuration
+MATCHER = 'https://nodes.swrmdao.com'
+MATCHER_PUBLICKEY = ''
 
-#DATAFEED = 'http://marketdata.wavesplatform.com'
-DATAFEED = 'https://api.wavesplatform.com'
+# Swarm datafeed endpoint
+DATAFEED = 'https://nodes.swrmdao.com'
 
 logging.basicConfig(
     level=logging.INFO,
@@ -103,7 +101,10 @@ def setChain(chain = CHAIN, chain_id = None):
         CHAIN = chain
         CHAIN_ID = chain_id
     else:
-        if chain.lower()=='mainnet' or chain.lower()=='w':
+        if chain.lower()=='swarm' or chain.lower()=='0':
+            CHAIN = 'swarm'
+            CHAIN_ID = '0'
+        elif chain.lower()=='mainnet' or chain.lower()=='w':
             CHAIN = 'mainnet'
             CHAIN_ID = 'W'
         elif chain.lower()=='hacknet' or chain.lower()=='u':
@@ -202,7 +203,9 @@ def validateAddress(address):
     addr = crypto.bytes2str(b58decode(address))
     if addr[0] != chr(ADDRESS_VERSION):
         logging.error("Wrong address version")
-    elif addr[1] != CHAIN_ID:
+    elif CHAIN_ID == '0' and addr[1] != '0':
+        logging.error("Wrong chain id")
+    elif CHAIN_ID != '0' and addr[1] != CHAIN_ID:
         logging.error("Wrong chain id")
     elif len(addr) != ADDRESS_LENGTH:
         logging.error("Wrong address length")

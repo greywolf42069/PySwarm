@@ -42,7 +42,7 @@ class ParallelPyWaves(object):
         self.OFFLINE = False
         self.NODE = 'https://nodes.wavesnodes.com'
 
-        self.ADDRESS_VERSION = 1
+        self.ADDRESS_VERSION = 5
         self.ADDRESS_CHECKSUM_LENGTH = 4
         self.ADDRESS_HASH_LENGTH = 20
         self.ADDRESS_LENGTH = 1 + 1 + self.ADDRESS_CHECKSUM_LENGTH + self.ADDRESS_HASH_LENGTH
@@ -87,12 +87,18 @@ class ParallelPyWaves(object):
             self.CHAIN = chain
             self.CHAIN_ID = chain_id
         else:
-            if chain.lower()=='mainnet' or chain.lower()=='w':
+            if chain.lower()=='swarm' or chain.lower()=='0':
+                self.CHAIN = 'swarm'
+                self.CHAIN_ID = '0'
+            elif chain.lower()=='mainnet' or chain.lower()=='w':
                 self.CHAIN = 'mainnet'
                 self.CHAIN_ID = 'W'
             elif chain.lower()=='hacknet' or chain.lower()=='u':
                 self.CHAIN = 'hacknet'
                 self.CHAIN_ID = 'U'
+            elif chain.lower()=='stagenet' or chain.lower()=='s':
+                self.CHAIN = 'stagenet'
+                self.CHAIN_ID = 'S'
             else:
                 self.CHAIN = 'testnet'
                 self.CHAIN_ID = 'T'
@@ -181,7 +187,9 @@ class ParallelPyWaves(object):
         addr = crypto.bytes2str(pw.b58decode(address))
         if addr[0] != chr(self.ADDRESS_VERSION):
             logging.error("Wrong address version")
-        elif addr[1] != self.CHAIN_ID:
+        elif self.CHAIN_ID == '0' and addr[1] != '0':
+            logging.error("Wrong chain id")
+        elif self.CHAIN_ID != '0' and addr[1] != self.CHAIN_ID:
             logging.error("Wrong chain id")
         elif len(addr) != self.ADDRESS_LENGTH:
             logging.error("Wrong address length")
